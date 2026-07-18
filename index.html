@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DERU — Tasarım Paneli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #FAF6EF;
+    --paper-card: #FFFFFF;
+    --ink: #241F1B;
+    --ink-soft: #6B615A;
+    --line: #E7DFD2;
+    --wine: #681F23;
+    --wine-soft: #F3E4E2;
+    --brass: #B08D57;
+    --brass-soft: #F3EADA;
+    --radius-lg: 22px;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background:
+      radial-gradient(circle at 15% 8%, rgba(104,31,35,0.05), transparent 45%),
+      radial-gradient(circle at 90% 90%, rgba(176,141,87,0.07), transparent 40%),
+      var(--paper);
+    min-height:100vh; display:flex; justify-content:center;
+    padding:36px 18px 60px; color:var(--ink);
+  }
+  button, textarea, input{ font-family:inherit; }
+  button:focus-visible, input:focus-visible, textarea:focus-visible, .matrix-item:focus-visible{
+    outline:2px solid var(--wine); outline-offset:2px;
+  }
+
+  .app{ width:100%; max-width:680px; display:flex; flex-direction:column; gap:26px; }
+
+  .brand-header{ text-align:center; padding-bottom:2px; }
+  .brand-mark{ font-family:'Fraunces', serif; font-weight:600; font-size:34px; letter-spacing:2px; color:var(--ink); }
+  .brand-mark span{ color:var(--wine); }
+  .brand-sub{ font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); margin-top:4px; }
+
+  .section-heading{
+    font-family:'Fraunces', serif; font-weight:600; font-size:19px; color:var(--ink);
+    display:flex; align-items:center; gap:10px;
+  }
+  .section-heading .num{
+    width:26px; height:26px; border-radius:50%; background:var(--wine); color:#fff;
+    font-family:'Inter'; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+
+  .panel{
+    background:var(--paper-card); border:1px solid var(--line); border-radius:var(--radius-lg);
+    box-shadow:0 18px 45px rgba(36,31,27,0.07); padding:26px 22px;
+    display:flex; flex-direction:column; gap:20px;
+  }
+
+  .name-row{ display:flex; align-items:center; gap:10px; background:var(--wine-soft); padding:12px 16px; border-radius:16px; }
+  .name-row label{ font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--wine); flex-shrink:0; }
+  .name-row input{ flex:1; border:1px solid transparent; background:#fff; border-radius:10px; padding:9px 12px; font-size:15px; color:var(--ink); }
+  .name-row input:focus{ border-color:var(--wine); }
+  .name-hint{ font-size:10.5px; color:var(--ink-soft); margin-top:-10px; }
+
+  .selector-row{ display:flex; align-items:center; justify-content:space-between; background:var(--wine-soft); padding:10px 10px 10px 18px; border-radius:16px; }
+  .selector-label{ font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--wine); }
+  .selector-value{ font-family:'Fraunces', serif; font-size:19px; font-weight:600; color:var(--ink); flex:1; text-align:center; }
+  .round-btn{ background:var(--paper-card); border:1px solid var(--line); border-radius:50%; width:38px; height:38px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; color:var(--wine); transition:transform .12s ease, background .12s ease; }
+  .round-btn:hover{ background:var(--wine); color:#fff; transform:scale(1.08); }
+  .round-btn:active{ transform:scale(0.93); }
+
+  .preview-wrap{ display:flex; justify-content:center; padding:6px 0 0; }
+  svg.main-preview{ width:100%; max-width:250px; height:auto; filter:drop-shadow(0 14px 20px rgba(36,31,27,0.14)); }
+
+  .section-label{ font-size:10.5px; font-weight:800; color:var(--brass); text-transform:uppercase; letter-spacing:1px; margin:4px 0 -6px 2px; }
+
+  .control-panel{ display:flex; flex-direction:column; gap:8px; }
+  .control-row{ display:flex; align-items:center; gap:8px; background:var(--paper); border:1px solid var(--line); padding:9px 14px; border-radius:12px; }
+  .control-label{ font-size:10.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.5px; width:104px; flex-shrink:0; }
+  .swatch{ width:15px; height:15px; border-radius:50%; flex-shrink:0; border:1px solid rgba(0,0,0,0.12); }
+  .nav-btn{ background:none; border:none; cursor:pointer; font-size:15px; color:var(--ink-soft); padding:4px 8px; transition:color .1s, transform .1s; }
+  .nav-btn:hover{ color:var(--wine); transform:scale(1.15); }
+  .nav-btn:disabled{ color:#D8D0C4; cursor:not-allowed; }
+  .nav-btn:disabled:hover{ transform:none; }
+  .val-text{ font-size:12.5px; font-weight:600; color:var(--ink); flex:1; text-align:center; }
+  .val-text.locked{ color:var(--ink-soft); }
+  .control-row.locked{ opacity:.75; }
+
+  .toolbar{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tool-btn{ flex:1; min-width:120px; background:var(--paper); border:1px solid var(--line); color:var(--ink); font-size:12px; font-weight:700; padding:11px 10px; border-radius:12px; cursor:pointer; letter-spacing:.2px; transition:all .12s ease; }
+  .tool-btn:hover{ border-color:var(--brass); background:var(--brass-soft); }
+  .tool-btn.primary{ background:var(--wine); color:#fff; border-color:var(--wine); }
+  .tool-btn.primary:hover{ background:#521116; }
+  .toast{ text-align:center; font-size:12px; font-weight:600; color:var(--wine); min-height:16px; opacity:0; transition:opacity .25s ease; }
+  .toast.show{ opacity:1; }
+  .save-indicator{ text-align:center; font-size:10.5px; color:var(--ink-soft); letter-spacing:.4px; }
+
+  .import-panel{ display:none; flex-direction:column; gap:10px; background:var(--paper); border:1px dashed var(--brass); border-radius:14px; padding:14px; }
+  .import-panel.open{ display:flex; }
+  .import-panel textarea{ width:100%; min-height:200px; resize:vertical; border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:12.5px; color:var(--ink); line-height:1.5; font-family:'SFMono-Regular', Consolas, monospace; }
+  .import-hint{ font-size:11px; color:var(--ink-soft); }
+
+  .matrix-title{ font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:1px; text-align:center; margin-bottom:14px; }
+  .matrix-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:9px; }
+  @media (max-width:480px){ .matrix-grid{ grid-template-columns:repeat(4,1fr); } }
+  .matrix-item{ background:var(--paper); border:1.5px solid var(--line); border-radius:12px; padding:6px; cursor:pointer; display:flex; flex-direction:column; align-items:center; transition:all .15s ease; }
+  .matrix-item:hover{ border-color:var(--brass); transform:translateY(-2px); }
+  .matrix-item.active{ border-color:var(--wine); background:var(--wine-soft); }
+  .matrix-item.bebek-item{ border-color:var(--brass); background:var(--brass-soft); }
+  .matrix-item svg{ width:100%; height:auto; max-height:64px; }
+  .matrix-label{ font-size:9.5px; font-weight:700; color:var(--ink-soft); margin-top:3px; }
+  .matrix-item.active .matrix-label{ color:var(--wine); }
+  .matrix-item.bebek-item .matrix-label{ color:var(--brass); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="brand-header">
+    <div class="brand-mark">DE<span>RU</span></div>
+    <div class="brand-sub">Bebek Şapkası &amp; 12'li Set · Tasarım Paneli</div>
+  </div>
+
+  <!-- ============ 1) BEBEK ŞAPKASI ============ -->
+  <div class="section-heading" id="bebekPanel"><span class="num">1</span> Bebek Şapkası</div>
+  <div class="panel">
+    <div class="name-row">
+      <label for="bbNameInput">İsim</label>
+      <input id="bbNameInput" type="text" maxlength="24" placeholder="Nakış için isim yazın (örn. Ece Su)" oninput="bbHandleNameChange(this.value)">
+    </div>
+    <div class="name-hint">İki kelimeli isimlerde ikinci kelime alt satıra iner (örn. "Ece Su"). Tek kelimelik isimler asla alt satıra inmez.</div>
+
+    <div class="preview-wrap">
+      <svg class="main-preview" viewBox="0 0 400 570" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="bbTopSmallPoti" width="16" height="16" patternUnits="userSpaceOnUse">
+            <rect id="bbTopSmallPotiBg" width="16" height="16" fill="#E3E5D2"/>
+            <rect width="8" height="16" fill="#ffffff" fill-opacity="0.35"/>
+            <rect width="16" height="8" fill="#ffffff" fill-opacity="0.35"/>
+          </pattern>
+          <pattern id="bbTopLargePoti" width="36" height="36" patternUnits="userSpaceOnUse">
+            <rect id="bbTopLargePotiBg" width="36" height="36" fill="#E3E5D2"/>
+            <rect width="18" height="36" fill="#ffffff" fill-opacity="0.35"/>
+            <rect width="36" height="18" fill="#ffffff" fill-opacity="0.35"/>
+          </pattern>
+          <pattern id="bbBottomSmallPoti" width="16" height="16" patternUnits="userSpaceOnUse">
+            <rect id="bbBottomSmallPotiBg" width="16" height="16" fill="#E3E5D2"/>
+            <rect width="8" height="16" fill="#ffffff" fill-opacity="0.35"/>
+            <rect width="16" height="8" fill="#ffffff" fill-opacity="0.35"/>
+          </pattern>
+          <pattern id="bbBottomLargePoti" width="36" height="36" patternUnits="userSpaceOnUse">
+            <rect id="bbBottomLargePotiBg" width="36" height="36" fill="#E3E5D2"/>
+            <rect width="18" height="36" fill="#ffffff" fill-opacity="0.35"/>
+            <rect width="36" height="18" fill="#ffffff" fill-opacity="0.35"/>
+          </pattern>
+          <pattern id="bbSuTasiPattern" width="18" height="9.15" patternUnits="userSpaceOnUse">
+            <rect id="bbSuTasiPatternBg" width="18" height="9.15" fill="#E3E5D2"/>
+            <path d="M0,9.15 L4.5,1 L9,9.15 L13.5,1 L18,9.15" stroke="#ffffff" stroke-opacity="0.55" stroke-width="1.4" fill="none"/>
+            <path d="M0,7.6 L4.5,-0.5 L9,7.6 L13.5,-0.5 L18,7.6" stroke="#000000" stroke-opacity="0.14" stroke-width="1" fill="none"/>
+          </pattern>
+          <linearGradient id="bbConeShadow" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#000000" stop-opacity="0.10"/>
+            <stop offset="30%" stop-color="#000000" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0.10"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 1. Alt Kumaş -->
+        <path id="bbBottomFabric" d="M 96.3 398.5 L 303.7 398.5 L 344 501 Q 200 525 56 501 Z" fill="#E3E5D2"/>
+
+        <!-- 2. Üst Kumaş -->
+        <path id="bbTopFabric" d="M 200 135 L 96.3 398.5 L 303.7 398.5 Z" fill="#E3E5D2"/>
+        <path d="M 56 501 Q 200 525 344 501 L 200 135 Z" fill="url(#bbConeShadow)" style="mix-blend-mode:multiply; pointer-events:none;"/>
+
+        <!-- 3. Su Taşı -->
+        <path id="bbSuTasi" d="M 98.1 393.9 L 301.9 393.9 L 305.5 403.1 L 94.5 403.1 Z" fill="url(#bbSuTasiPattern)"/>
+
+        <!-- 4. İsim -->
+        <text id="bbNameShadow" text-anchor="middle" font-family="'Dancing Script', cursive" font-weight="700" fill="#000000"></text>
+        <text id="bbNameText" text-anchor="middle" font-family="'Dancing Script', cursive" font-weight="700" fill="#E3E5D2"></text>
+
+        <!-- 5. Kurdele -->
+        <path id="bbRibbonLeft" d="M 82 438 C 70 470, 85 520, 60 560 C 50 540, 55 490, 78 435 Z" fill="#E3E5D2"/>
+        <path id="bbRibbonRight" d="M 318 438 C 330 470, 315 520, 340 560 C 350 540, 345 490, 322 435 Z" fill="#E3E5D2"/>
+
+        <!-- 6. Ponpon -->
+        <g id="bbPomponGroup" fill="#E3E5D2">
+          <circle cx="200" cy="130" r="46"/>
+          <circle cx="200" cy="83" r="3.5"/><circle cx="200" cy="177" r="3.5"/><circle cx="153" cy="130" r="3.5"/><circle cx="247" cy="130" r="3.5"/>
+          <circle cx="167" cy="97" r="3.5"/><circle cx="233" cy="97" r="3.5"/><circle cx="167" cy="163" r="3.5"/><circle cx="233" cy="163" r="3.5"/>
+          <circle cx="178" cy="88" r="3.5"/><circle cx="222" cy="88" r="3.5"/><circle cx="178" cy="172" r="3.5"/><circle cx="222" cy="172" r="3.5"/>
+          <circle cx="156" cy="111" r="3.5"/><circle cx="244" cy="111" r="3.5"/><circle cx="156" cy="149" r="3.5"/><circle cx="244" cy="149" r="3.5"/>
+          <circle cx="189" cy="84" r="3.5"/><circle cx="211" cy="84" r="3.5"/><circle cx="189" cy="176" r="3.5"/><circle cx="211" cy="176" r="3.5"/>
+          <circle cx="154" cy="120" r="3.5"/><circle cx="246" cy="120" r="3.5"/><circle cx="154" cy="140" r="3.5"/><circle cx="246" cy="140" r="3.5"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="section-label">Üst Kumaş</div>
+    <div class="control-panel">
+      <div class="control-row" id="bbTopTextureRow">
+        <span class="control-label">Deseni</span>
+        <button class="nav-btn" id="bbTopTexturePrev" onclick="bbHandleTextureChange('top', -1)" aria-label="Önceki desen">◀</button>
+        <span class="val-text" id="bbValTopTexture">Düz Kumaş</span>
+        <button class="nav-btn" id="bbTopTextureNext" onclick="bbHandleTextureChange('top', 1)" aria-label="Sonraki desen">▶</button>
+      </div>
+      <div class="control-row">
+        <span class="control-label">Rengi</span>
+        <span class="swatch" id="bbDotTopFabric"></span>
+        <button class="nav-btn" onclick="bbHandleColorChange('topFabricColor', fabricColors, -1, 'topTexture')" aria-label="Önceki renk">◀</button>
+        <span class="val-text" id="bbValTopFabric">Kırık Beyaz</span>
+        <button class="nav-btn" onclick="bbHandleColorChange('topFabricColor', fabricColors, 1, 'topTexture')" aria-label="Sonraki renk">▶</button>
+      </div>
+    </div>
+
+    <div class="section-label">Alt Kumaş</div>
+    <div class="control-panel">
+      <div class="control-row" id="bbBottomTextureRow">
+        <span class="control-label">Deseni</span>
+        <button class="nav-btn" id="bbBottomTexturePrev" onclick="bbHandleTextureChange('bottom', -1)" aria-label="Önceki desen">◀</button>
+        <span class="val-text" id="bbValBottomTexture">Düz Kumaş</span>
+        <button class="nav-btn" id="bbBottomTextureNext" onclick="bbHandleTextureChange('bottom', 1)" aria-label="Sonraki desen">▶</button>
+      </div>
+      <div class="control-row">
+        <span class="control-label">Rengi</span>
+        <span class="swatch" id="bbDotBottomFabric"></span>
+        <button class="nav-btn" onclick="bbHandleColorChange('bottomFabricColor', fabricColors, -1, 'bottomTexture')" aria-label="Önceki renk">◀</button>
+        <span class="val-text" id="bbValBottomFabric">Kırık Beyaz</span>
+        <button class="nav-btn" onclick="bbHandleColorChange('bottomFabricColor', fabricColors, 1, 'bottomTexture')" aria-label="Sonraki renk">▶</button>
+      </div>
+    </div>
+
+    <div class="section-label">Diğer Renkler</div>
+    <div class="control-panel">
+      <div class="control-row">
+        <span class="control-label">Su Taşı</span>
+        <span class="swatch" id="bbDotSuTasi"></span>
+        <button class="nav-btn" onclick="bbHandleColorChange('suTasiColor', suTasiColors, -1)" aria-label="Önceki renk">◀</button>
+        <span class="val-text" id="bbValSuTasi">Kırık Beyaz</span>
+        <button class="nav-btn" onclick="bbHandleColorChange('suTasiColor', suTasiColors, 1)" aria-label="Sonraki renk">▶</button>
+      </div>
+      <div class="control-row">
+        <span class="control-label">Ponpon</span>
+        <span class="swatch" id="bbDotPompon"></span>
+        <button class="nav-btn" onclick="bbHandleColorChange('pomponColor', pomponColors, -1)" aria-label="Önceki renk">◀</button>
+        <span class="val-text" id="bbValPompon">Kırık Beyaz</span>
+        <button class="nav-btn" onclick="bbHandleColorChange('pomponColor', pomponColors, 1)" aria-label="Sonraki renk">▶</button>
+      </div>
+      <div class="control-row">
+        <span class="control-label">Kurdele</span>
+        <span class="swatch" id="bbDotKurdele"></span>
+        <button class="nav-btn" onclick="bbHandleColorChange('kurdeleColor', kurdeleColors, -1)" aria-label="Önceki renk">◀</button>
+        <span class="val-text" id="bbValKurdele">Kırık Beyaz</span>
+        <button class="nav-btn" onclick="bbHandleColorChange('kurdeleColor', kurdeleColors, 1)" aria-label="Sonraki renk">▶</button>
+      </div>
+      <div class="control-row">
+        <span class="control-label">İsim (İplik)</span>
+        <span class="swatch" id="bbDotThread"></span>
+        <button class="nav-btn" onclick="bbHandleColorChange('threadColor', threadColors, -1)" aria-label="Önceki renk">◀</button>
+        <span class="val-text" id="bbValThread">Kırık Beyaz</span>
+        <button class="nav-btn" onclick="bbHandleColorChange('threadColor', threadColors, 1)" aria-label="Sonraki renk">▶</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button class="tool-btn" onclick="bbResetAll()">Bebek Şapkasını Sıfırla</button>
+    </div>
+    <div class="toast" id="bbToast">&nbsp;</div>
+    <div class="save-indicator" id="bbSaveIndicator">&nbsp;</div>
+  </div>
+
+  <!-- ============ 2) 1'DEN 12'YE ŞAPKALAR ============ -->
+  <div class="section-heading"><span class="num">2</span> 1'den 12'ye Şapkalar</div>
+  <div class="panel">
+    <div class="selector-row">
+      <span class="selector-label">Düzenlenen</span>
+      <button class="round-btn" onclick="changeHatNumber(-1)" aria-label="Önceki şapka">◀</button>
+      <span class="selector-value" id="valHatNumber">Şapka No 1</span>
+      <button class="round-btn" onclick="changeHatNumber(1)" aria-label="Sonraki şapka">▶</button>
+    </div>
+
+    <div class="preview-wrap">
+      <svg class="main-preview" viewBox="0 0 400 570" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="mainSmallPoti" width="16" height="16" patternUnits="userSpaceOnUse">
+            <rect id="mainSmallPotiBg" width="16" height="16" fill="#E3E5D2"/>
+            <rect width="8" height="16" fill="#ffffff" fill-opacity="0.35"/>
+            <rect width="16" height="8" fill="#ffffff" fill-opacity="0.35"/>
+          </pattern>
+          <pattern id="mainLargePoti" width="36" height="36" patternUnits="userSpaceOnUse">
+            <rect id="mainLargePotiBg" width="36" height="36" fill="#E3E5D2"/>
+            <rect width="18" height="36" fill="#ffffff" fill-opacity="0.35"/>
+            <rect width="36" height="18" fill="#ffffff" fill-opacity="0.35"/>
+          </pattern>
+          <linearGradient id="coneShadow" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#000000" stop-opacity="0.12"/>
+            <stop offset="30%" stop-color="#000000" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0.12"/>
+          </linearGradient>
+          <linearGradient id="brassShine" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0.55"/>
+            <stop offset="45%" stop-color="#fff" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#000" stop-opacity="0.08"/>
+          </linearGradient>
+        </defs>
+
+        <path id="mainRibbonLeft" d="M 82 438 C 70 470, 85 520, 60 560 C 50 540, 55 490, 78 435 Z" fill="#E3E5D2"/>
+        <path id="mainRibbonRight" d="M 318 438 C 330 470, 315 520, 340 560 C 350 540, 345 490, 322 435 Z" fill="#E3E5D2"/>
+
+        <path id="mainHatBody" d="M 80 440 Q 200 460 320 440 L 200 135 Z" fill="#E3E5D2"/>
+        <path d="M 80 440 Q 200 460 320 440 L 200 135 Z" fill="url(#coneShadow)" style="mix-blend-mode:multiply; pointer-events:none;"/>
+
+        <text id="mainHatNumberText" x="200" y="375" text-anchor="middle" fill="#E3E5D2" font-family="Futura, 'Century Gothic', sans-serif" font-weight="200" font-size="165" letter-spacing="-2">1</text>
+        <text x="200" y="375" text-anchor="middle" fill="url(#brassShine)" font-family="Futura, 'Century Gothic', sans-serif" font-weight="200" font-size="165" letter-spacing="-2" style="pointer-events:none;" id="mainHatNumberShine">1</text>
+
+        <g id="mainPomponGroup" fill="#E3E5D2">
+          <circle cx="200" cy="130" r="46"/>
+          <circle cx="200" cy="83" r="3.5"/><circle cx="200" cy="177" r="3.5"/><circle cx="153" cy="130" r="3.5"/><circle cx="247" cy="130" r="3.5"/>
+          <circle cx="167" cy="97" r="3.5"/><circle cx="233" cy="97" r="3.5"/><circle cx="167" cy="163" r="3.5"/><circle cx="233" cy="163" r="3.5"/>
+          <circle cx="178" cy="88" r="3.5"/><circle cx="222" cy="88" r="3.5"/><circle cx="178" cy="172" r="3.5"/><circle cx="222" cy="172" r="3.5"/>
+          <circle cx="156" cy="111" r="3.5"/><circle cx="244" cy="111" r="3.5"/><circle cx="156" cy="149" r="3.5"/><circle cx="244" cy="149" r="3.5"/>
+          <circle cx="189" cy="84" r="3.5"/><circle cx="211" cy="84" r="3.5"/><circle cx="189" cy="176" r="3.5"/><circle cx="211" cy="176" r="3.5"/>
+          <circle cx="154" cy="120" r="3.5"/><circle cx="246" cy="120" r="3.5"/><circle cx="154" cy="140" r="3.5"/><circle cx="246" cy="140" r="3.5"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="control-panel">
+      <div class="control-row" id="textureRow">
+        <span class="control-label">Kumaş Deseni</span>
+        <button class="nav-btn" id="textureBtnPrev" onclick="handleTextureChange(-1)" aria-label="Önceki desen">◀</button>
+        <span class="val-text" id="valTexture">Düz Kumaş</span>
+        <button class="nav-btn" id="textureBtnNext" onclick="handleTextureChange(1)" aria-label="Sonraki desen">▶</button>
+      </div>
+      <div class="control-row">
+        <span class="control-label">Kumaş Rengi</span>
+        <span class="swatch" id="dotFabric"></span>
+        <button class="nav-btn" onclick="handleColorChange('fabric', -1)" aria-label="Önceki renk">◀</button>
+        <span class="val-text" id="valFabric">Kırık Beyaz</span>
+        <button class="nav-btn" onclick="handleColorChange('fabric', 1)" aria-label="Sonraki renk">▶</button>
+      </div>
+      <div class="control-row">
+        <span class="control-label">Ponpon Rengi</span>
+        <span class="swatch" id="dotPompon"></span>
+        <button class="nav-btn" onclick="handleColorChange('pompon', -1)" aria-label="Önceki renk">◀</button>
+        <span class="val-text" id="valPompon">Kırık Beyaz</span>
+        <button class="nav-btn" onclick="handleColorChange('pompon', 1)" aria-label="Sonraki renk">▶</button>
+      </div>
+      <div class="control-row">
+        <span class="control-label">Kurdele Rengi</span>
+        <span class="swatch" id="dotRibbon"></span>
+        <button class="nav-btn" onclick="handleColorChange('ribbon', -1)" aria-label="Önceki renk">◀</button>
+        <span class="val-text" id="valRibbon">Kırık Beyaz</span>
+        <button class="nav-btn" onclick="handleColorChange('ribbon', 1)" aria-label="Sonraki renk">▶</button>
+      </div>
+      <div class="control-row">
+        <span class="control-label">Sayı Rengi</span>
+        <span class="swatch" id="dotText"></span>
+        <button class="nav-btn" onclick="handleColorChange('text', -1)" aria-label="Önceki renk">◀</button>
+        <span class="val-text" id="valText">Kırık Beyaz</span>
+        <button class="nav-btn" onclick="handleColorChange('text', 1)" aria-label="Sonraki renk">▶</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button class="tool-btn" onclick="applyCurrentToAll()">Bu Tasarımı Tümüne Uygula</button>
+      <button class="tool-btn" onclick="resetHat(currentHatNum)">Bu Şapkayı Sıfırla</button>
+    </div>
+    <div class="toast" id="toast">&nbsp;</div>
+    <div class="save-indicator" id="saveIndicator">&nbsp;</div>
+  </div>
+
+  <!-- ============ KOMBİNE GENEL GÖRÜNÜM (13 ŞAPKA) ============ -->
+  <div class="panel">
+    <div class="matrix-title">Tüm Set Genel Görünümü · Bebek Şapkası + 1'den 12'ye (13 Şapka)</div>
+    <div class="matrix-grid" id="matrixGrid"></div>
+  </div>
+
+  <!-- ============ TEK ÜRETİM ÖZETİ (TÜM SET) ============ -->
+  <div class="section-heading"><span class="num">3</span> Üretim Özeti (Tüm Set)</div>
+  <div class="panel">
+    <div class="toolbar">
+      <button class="tool-btn" onclick="combinedToggleImportPanel()">Özetten Oluştur</button>
+      <button class="tool-btn primary" onclick="combinedCopySummary()">Tüm Seti Kopyala (13 Şapka)</button>
+    </div>
+
+    <div class="import-panel" id="combinedImportPanel">
+      <div class="import-hint">Daha önce kopyaladığınız tam set üretim özetini aşağıya yapıştırın. Hem Bebek Şapkası hem de 1'den 12'ye kadar tüm şapkalar birlikte yeniden oluşturulur.</div>
+      <textarea id="combinedImportText" placeholder="DERU — Tam Set Üretim Özeti&#10;[BEBEK ŞAPKASI]&#10;İsim: Ece&#10;...&#10;[1'DEN 12'YE ŞAPKALAR]&#10;No 1: Kumaş ..."></textarea>
+      <div class="toolbar">
+        <button class="tool-btn primary" onclick="combinedImportSummary()">Yapıştırılanı Uygula</button>
+        <button class="tool-btn" onclick="combinedToggleImportPanel(false)">Vazgeç</button>
+      </div>
+    </div>
+
+    <div class="toast" id="combinedToast">&nbsp;</div>
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     RENK PALETLERİ (Bebek Şapkası + 1'den 12'ye Şapkalar ortak kullanır)
+     Her aksesuar türü için ayrı ve bağımsız bir renk listesi.
+     Yeni bir renk eklemek / bir paleti tamamen değiştirmek için
+     ilgili diziye { name: "Renk Adı", hex: "#RRGGBB" } satırı
+     ekleyin ya da diziyi tamamen değiştirin. Diğer paletleri
+     etkilemez. "Kırık Beyaz" adlı renk her zaman fabricColors
+     içinde bulunmalı (Düz Kumaş kısıtlaması bu isme bakar).
+     ============================================================ */
+  const fabricColors = [   // Kumaş renkleri (Bebek: üst+alt / Standart: gövde)
+    { name: "Kırık Beyaz", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
+    { name: "Şeker Pembe", hex: "#C97D90" }, { name: "Turuncu", hex: "#D74B15" },
+    { name: "Kırmızı", hex: "#880816" }, { name: "Bordo", hex: "#681F23" },
+    { name: "Sarı", hex: "#EBC912" }, { name: "Açık Yeşil", hex: "#70804A" },
+    { name: "Koyu Yeşil", hex: "#133022" }, { name: "Açık Mavi", hex: "#81A8BC" },
+    { name: "Lacivert", hex: "#0F1E30" }, { name: "Koyu Kahve", hex: "#635041" }
+  ];
+  const pomponColors = [   // Ponpon renkleri
+    { name: "Kırık Beyaz", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
+    { name: "Şeker Pembe", hex: "#C97D90" }, { name: "Turuncu", hex: "#D74B15" },
+    { name: "Kırmızı", hex: "#880816" }, { name: "Bordo", hex: "#681F23" },
+    { name: "Sarı", hex: "#EBC912" }, { name: "Açık Yeşil", hex: "#70804A" },
+    { name: "Koyu Yeşil", hex: "#133022" }, { name: "Açık Mavi", hex: "#81A8BC" },
+    { name: "Lacivert", hex: "#0F1E30" }, { name: "Koyu Kahve", hex: "#635041" }
+  ];
+  const threadColors = [   // İsim / sayı nakışı için iplik renkleri
+    { name: "Kırık Beyaz", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
+    { name: "Şeker Pembe", hex: "#C97D90" }, { name: "Turuncu", hex: "#D74B15" },
+    { name: "Kırmızı", hex: "#880816" }, { name: "Bordo", hex: "#681F23" },
+    { name: "Sarı", hex: "#EBC912" }, { name: "Açık Yeşil", hex: "#70804A" },
+    { name: "Koyu Yeşil", hex: "#133022" }, { name: "Açık Mavi", hex: "#81A8BC" },
+    { name: "Lacivert", hex: "#0F1E30" }, { name: "Koyu Kahve", hex: "#635041" }
+  ];
+  const suTasiColors = [   // Su Taşı (dekoratif bandı) renkleri
+    { name: "Kırık Beyaz", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
+    { name: "Şeker Pembe", hex: "#C97D90" }, { name: "Turuncu", hex: "#D74B15" },
+    { name: "Kırmızı", hex: "#880816" }, { name: "Bordo", hex: "#681F23" },
+    { name: "Sarı", hex: "#EBC912" }, { name: "Açık Yeşil", hex: "#70804A" },
+    { name: "Koyu Yeşil", hex: "#133022" }, { name: "Açık Mavi", hex: "#81A8BC" },
+    { name: "Lacivert", hex: "#0F1E30" }, { name: "Koyu Kahve", hex: "#635041" }
+  ];
+  const kurdeleColors = [   // Kurdele renkleri
+    { name: "Kırık Beyaz", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
+    { name: "Şeker Pembe", hex: "#C97D90" }, { name: "Turuncu", hex: "#D74B15" },
+    { name: "Kırmızı", hex: "#880816" }, { name: "Bordo", hex: "#681F23" },
+    { name: "Sarı", hex: "#EBC912" }, { name: "Açık Yeşil", hex: "#70804A" },
+    { name: "Koyu Yeşil", hex: "#133022" }, { name: "Açık Mavi", hex: "#81A8BC" },
+    { name: "Lacivert", hex: "#0F1E30" }, { name: "Koyu Kahve", hex: "#635041" }
+  ];
+
+  const KIRIK_BEYAZ = "Kırık Beyaz";
+
+  /* ================= ORTAK YARDIMCI FONKSİYONLAR ================= */
+  function findColorIndexByName(paletteArr, rawName) {
+    if (!rawName) return -1;
+    const target = rawName.trim().toLowerCase();
+    return paletteArr.findIndex(c => c.name.toLowerCase() === target);
+  }
+  function findTextureIndexByName(namesArr, rawName) {
+    if (!rawName) return -1;
+    const target = rawName.trim().toLowerCase();
+    return namesArr.findIndex(n => n.toLowerCase() === target);
+  }
+  function copyTextToClipboard(text, onDone) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(onDone).catch(() => legacyCopy(text, onDone));
+    } else {
+      legacyCopy(text, onDone);
+    }
+  }
+  function legacyCopy(text, done) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    done();
+  }
+
+  /* ================= BEBEK ŞAPKASI ================= */
+  const bbTextures = ["Düz Kumaş", "Küçük Pötikare (4mm)", "Büyük Pötikare (9mm)"];
+  const bbExportTextureNames = ["Düz Kumaş", "Küçük Pötikare", "Büyük Pötikare"];
+  const BB_STORAGE_KEY = "deru-bebek-sapkasi";
+  const BB_NAME_FONT_SIZE = 46;
+  const BB_NAME_LINE_HEIGHT = 46;
+  const BB_NAME_CENTER_Y = 335;
+
+  function bbDefaultConfig() {
+    return {
+      name: "", topFabricColor: 0, topTexture: 0, bottomFabricColor: 0, bottomTexture: 0,
+      suTasiColor: 0, pomponColor: 0, kurdeleColor: 0, threadColor: 0
+    };
+  }
+  let bbConfig = bbDefaultConfig();
+  let bbSaveTimer = null;
+
+  function bbIsKirikBeyaz(idx) { return fabricColors[idx].name === KIRIK_BEYAZ; }
+
+  function bbHandleColorChange(field, palette, dir, coupledTextureField) {
+    bbConfig[field] = (bbConfig[field] + dir + palette.length) % palette.length;
+    if (coupledTextureField && palette === fabricColors && bbIsKirikBeyaz(bbConfig[field])) {
+      bbConfig[coupledTextureField] = 0;
+    }
+    bbRenderUI();
+    bbQueueSave();
+  }
+
+  function bbHandleTextureChange(which, dir) {
+    const colorField = which === 'top' ? 'topFabricColor' : 'bottomFabricColor';
+    const textureField = which === 'top' ? 'topTexture' : 'bottomTexture';
+    if (bbIsKirikBeyaz(bbConfig[colorField])) {
+      bbShowToast('Kırık Beyaz kumaşta yalnızca Düz Kumaş bulunur.');
+      return;
+    }
+    bbConfig[textureField] = (bbConfig[textureField] + dir + bbTextures.length) % bbTextures.length;
+    bbRenderUI();
+    bbQueueSave();
+  }
+
+  function bbHandleNameChange(value) {
+    bbConfig.name = value;
+    bbRenderUI();
+    bbQueueSave();
+  }
+
+  function bbResetAll() {
+    bbConfig = bbDefaultConfig();
+    document.getElementById('bbNameInput').value = '';
+    bbRenderUI();
+    bbQueueSave();
+    bbShowToast('Bebek Şapkası tasarımı varsayılana sıfırlandı.');
+  }
+
+  function bbShowToast(msg) {
+    const t = document.getElementById('bbToast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(bbShowToast._timer);
+    bbShowToast._timer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function bbQueueSave() {
+    clearTimeout(bbSaveTimer);
+    const indicator = document.getElementById('bbSaveIndicator');
+    indicator.textContent = 'Kaydediliyor…';
+    bbSaveTimer = setTimeout(async () => {
+      try {
+        if (window.storage) {
+          await window.storage.set(BB_STORAGE_KEY, JSON.stringify(bbConfig), false);
+          indicator.textContent = 'Tüm değişiklikler kaydedildi ✓';
+        } else {
+          indicator.textContent = 'Bu oturumda geçici olarak saklanıyor';
+        }
+      } catch (e) {
+        indicator.textContent = 'Kaydetme sırasında bir sorun oluştu';
+      }
+    }, 500);
+  }
+
+  async function bbLoadState() {
+    try {
+      if (window.storage) {
+        const result = await window.storage.get(BB_STORAGE_KEY, false);
+        if (result && result.value) {
+          const parsed = JSON.parse(result.value);
+          bbConfig = { ...bbDefaultConfig(), ...parsed };
+          if (bbIsKirikBeyaz(bbConfig.topFabricColor)) bbConfig.topTexture = 0;
+          if (bbIsKirikBeyaz(bbConfig.bottomFabricColor)) bbConfig.bottomTexture = 0;
+          document.getElementById('bbNameInput').value = bbConfig.name || '';
+          document.getElementById('bbSaveIndicator').textContent = 'Kayıtlı tasarım yüklendi';
+        }
+      }
+    } catch (e) { /* Kayıtlı tasarım yok — varsayılanlarla devam edilir. */ }
+  }
+
+  function bbApplyFabric(prefix, colorIdx, textureIdx) {
+    const color = fabricColors[colorIdx];
+    const body = document.getElementById(`${prefix}Fabric`);
+    if (textureIdx === 0) {
+      body.setAttribute('fill', color.hex);
+    } else if (textureIdx === 1) {
+      document.getElementById(`${prefix}SmallPotiBg`).setAttribute('fill', color.hex);
+      body.setAttribute('fill', `url(#${prefix}SmallPoti)`);
+    } else {
+      document.getElementById(`${prefix}LargePotiBg`).setAttribute('fill', color.hex);
+      body.setAttribute('fill', `url(#${prefix}LargePoti)`);
+    }
+  }
+
+  // Tek kelimelik isimler asla ikinci satıra inmez. İki (veya daha fazla)
+  // kelimelik isimlerde ilk kelime üstte, geri kalanı altta — üst üste iki satır.
+  function bbGetNameLines(rawName) {
+    const trimmed = (rawName || '').trim();
+    if (!trimmed) return ['İsim'];
+    const words = trimmed.split(/\s+/);
+    if (words.length <= 1) return [trimmed];
+    return [words[0], words.slice(1).join(' ')];
+  }
+
+  function bbSetNameLines(textEl, lines, xCenter, yOffset) {
+    while (textEl.firstChild) textEl.removeChild(textEl.firstChild);
+    const startY = lines.length === 1 ? BB_NAME_CENTER_Y : BB_NAME_CENTER_Y - BB_NAME_LINE_HEIGHT / 2;
+    lines.forEach((line, idx) => {
+      const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+      tspan.setAttribute('x', xCenter);
+      tspan.setAttribute('y', startY + idx * BB_NAME_LINE_HEIGHT + yOffset);
+      tspan.textContent = line;
+      textEl.appendChild(tspan);
+    });
+  }
+
+  function bbRenderUI() {
+    const topLocked = bbIsKirikBeyaz(bbConfig.topFabricColor);
+    document.getElementById('bbValTopFabric').textContent = fabricColors[bbConfig.topFabricColor].name;
+    document.getElementById('bbDotTopFabric').style.background = fabricColors[bbConfig.topFabricColor].hex;
+    document.getElementById('bbValTopTexture').textContent = topLocked ? 'Düz Kumaş (sabit)' : bbTextures[bbConfig.topTexture];
+    document.getElementById('bbValTopTexture').classList.toggle('locked', topLocked);
+    document.getElementById('bbTopTextureRow').classList.toggle('locked', topLocked);
+    document.getElementById('bbTopTexturePrev').disabled = topLocked;
+    document.getElementById('bbTopTextureNext').disabled = topLocked;
+    bbApplyFabric('bbTop', bbConfig.topFabricColor, bbConfig.topTexture);
+
+    const bottomLocked = bbIsKirikBeyaz(bbConfig.bottomFabricColor);
+    document.getElementById('bbValBottomFabric').textContent = fabricColors[bbConfig.bottomFabricColor].name;
+    document.getElementById('bbDotBottomFabric').style.background = fabricColors[bbConfig.bottomFabricColor].hex;
+    document.getElementById('bbValBottomTexture').textContent = bottomLocked ? 'Düz Kumaş (sabit)' : bbTextures[bbConfig.bottomTexture];
+    document.getElementById('bbValBottomTexture').classList.toggle('locked', bottomLocked);
+    document.getElementById('bbBottomTextureRow').classList.toggle('locked', bottomLocked);
+    document.getElementById('bbBottomTexturePrev').disabled = bottomLocked;
+    document.getElementById('bbBottomTextureNext').disabled = bottomLocked;
+    bbApplyFabric('bbBottom', bbConfig.bottomFabricColor, bbConfig.bottomTexture);
+
+    document.getElementById('bbValSuTasi').textContent = suTasiColors[bbConfig.suTasiColor].name;
+    document.getElementById('bbDotSuTasi').style.background = suTasiColors[bbConfig.suTasiColor].hex;
+    document.getElementById('bbSuTasiPatternBg').setAttribute('fill', suTasiColors[bbConfig.suTasiColor].hex);
+
+    document.getElementById('bbValPompon').textContent = pomponColors[bbConfig.pomponColor].name;
+    document.getElementById('bbDotPompon').style.background = pomponColors[bbConfig.pomponColor].hex;
+    document.getElementById('bbPomponGroup').setAttribute('fill', pomponColors[bbConfig.pomponColor].hex);
+
+    document.getElementById('bbValKurdele').textContent = kurdeleColors[bbConfig.kurdeleColor].name;
+    document.getElementById('bbDotKurdele').style.background = kurdeleColors[bbConfig.kurdeleColor].hex;
+    document.getElementById('bbRibbonLeft').setAttribute('fill', kurdeleColors[bbConfig.kurdeleColor].hex);
+    document.getElementById('bbRibbonRight').setAttribute('fill', kurdeleColors[bbConfig.kurdeleColor].hex);
+
+    document.getElementById('bbValThread').textContent = threadColors[bbConfig.threadColor].name;
+    document.getElementById('bbDotThread').style.background = threadColors[bbConfig.threadColor].hex;
+
+    const nameTxt = document.getElementById('bbNameText');
+    const nameShadow = document.getElementById('bbNameShadow');
+    const hasName = !!(bbConfig.name && bbConfig.name.trim());
+    const lines = bbGetNameLines(bbConfig.name);
+
+    bbSetNameLines(nameTxt, lines, 200, 0);
+    bbSetNameLines(nameShadow, lines, 201, 1.5);
+    nameTxt.setAttribute('font-size', BB_NAME_FONT_SIZE);
+    nameShadow.setAttribute('font-size', BB_NAME_FONT_SIZE);
+
+    nameTxt.setAttribute('fill', threadColors[bbConfig.threadColor].hex);
+    if (hasName) {
+      nameTxt.setAttribute('fill-opacity', '1');
+      nameTxt.removeAttribute('font-style');
+      nameShadow.setAttribute('fill-opacity', '0.22');
+    } else {
+      nameTxt.setAttribute('fill-opacity', '0.3');
+      nameTxt.setAttribute('font-style', 'italic');
+      nameShadow.setAttribute('fill-opacity', '0');
+    }
+
+    updateCombinedMatrixBebek();
+  }
+
+  /* ================= 1'DEN 12'YE ŞAPKALAR ================= */
+  const palette = fabricColors; // aynı 12 rengi kullanır (istenirse bağımsız bir liste tanımlanabilir)
+  const textures = ["Düz Kumaş", "Küçük Pötikare", "Büyük Pötikare"];
+  const STORAGE_KEY = "deru-parti-sapkasi-set";
+
+  let currentHatNum = 1;
+  let hatConfigs = {};
+  let saveTimer = null;
+
+  function defaultConfig(){ return { fabric: 0, pompon: 0, ribbon: 0, text: 0, textureType: 0 }; }
+  for (let i = 1; i <= 12; i++) hatConfigs[i] = defaultConfig();
+
+  function changeHatNumber(dir) {
+    currentHatNum += dir;
+    if (currentHatNum < 1) currentHatNum = 12;
+    if (currentHatNum > 12) currentHatNum = 1;
+    renderUI();
+  }
+
+  function selectHatFromMatrix(num) {
+    currentHatNum = num;
+    renderUI();
+    document.getElementById('valHatNumber').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function handleColorChange(part, dir) {
+    const cfg = hatConfigs[currentHatNum];
+    cfg[part] = (cfg[part] + dir + palette.length) % palette.length;
+    if (part === 'fabric' && palette[cfg.fabric].name === KIRIK_BEYAZ) cfg.textureType = 0;
+    renderUI();
+    queueSave();
+  }
+
+  function handleTextureChange(dir) {
+    const cfg = hatConfigs[currentHatNum];
+    if (palette[cfg.fabric].name === KIRIK_BEYAZ) {
+      showToast('Kırık Beyaz kumaşta yalnızca Düz Kumaş bulunur.');
+      return;
+    }
+    cfg.textureType = (cfg.textureType + dir + textures.length) % textures.length;
+    renderUI();
+    queueSave();
+  }
+
+  function applyCurrentToAll() {
+    const source = { ...hatConfigs[currentHatNum] };
+    for (let i = 1; i <= 12; i++) hatConfigs[i] = { ...source };
+    renderUI();
+    queueSave();
+    showToast(`Şapka ${currentHatNum} tasarımı 12 şapkanın tümüne uygulandı.`);
+  }
+
+  function resetHat(num) {
+    hatConfigs[num] = defaultConfig();
+    renderUI();
+    queueSave();
+    showToast(`Şapka ${num} varsayılana sıfırlandı.`);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  function queueSave() {
+    clearTimeout(saveTimer);
+    const indicator = document.getElementById('saveIndicator');
+    indicator.textContent = 'Kaydediliyor…';
+    saveTimer = setTimeout(async () => {
+      try {
+        if (window.storage) {
+          await window.storage.set(STORAGE_KEY, JSON.stringify(hatConfigs), false);
+          indicator.textContent = 'Tüm değişiklikler kaydedildi ✓';
+        } else {
+          indicator.textContent = 'Bu oturumda geçici olarak saklanıyor';
+        }
+      } catch (e) {
+        indicator.textContent = 'Kaydetme sırasında bir sorun oluştu';
+      }
+    }, 500);
+  }
+
+  async function loadState() {
+    try {
+      if (window.storage) {
+        const result = await window.storage.get(STORAGE_KEY, false);
+        if (result && result.value) {
+          const parsed = JSON.parse(result.value);
+          for (let i = 1; i <= 12; i++) {
+            if (parsed[i]) {
+              const merged = { ...defaultConfig(), ...parsed[i] };
+              if (palette[merged.fabric].name === KIRIK_BEYAZ) merged.textureType = 0;
+              hatConfigs[i] = merged;
+            }
+          }
+          document.getElementById('saveIndicator').textContent = 'Kayıtlı tasarım yüklendi';
+        }
+      }
+    } catch (e) { /* Kayıtlı tasarım yok — varsayılanlarla devam edilir. */ }
+  }
+
+  function renderUI() {
+    const cfg = hatConfigs[currentHatNum];
+
+    document.getElementById('valHatNumber').textContent = `Şapka No ${currentHatNum}`;
+    document.getElementById('valFabric').textContent = palette[cfg.fabric].name;
+    document.getElementById('valPompon').textContent = palette[cfg.pompon].name;
+    document.getElementById('valRibbon').textContent = palette[cfg.ribbon].name;
+    document.getElementById('valText').textContent = palette[cfg.text].name;
+
+    const locked = palette[cfg.fabric].name === KIRIK_BEYAZ;
+    document.getElementById('valTexture').textContent = locked ? 'Düz Kumaş (sabit)' : textures[cfg.textureType];
+    document.getElementById('valTexture').classList.toggle('locked', locked);
+    document.getElementById('textureRow').classList.toggle('locked', locked);
+    document.getElementById('textureBtnPrev').disabled = locked;
+    document.getElementById('textureBtnNext').disabled = locked;
+
+    document.getElementById('dotFabric').style.background = palette[cfg.fabric].hex;
+    document.getElementById('dotPompon').style.background = palette[cfg.pompon].hex;
+    document.getElementById('dotRibbon').style.background = palette[cfg.ribbon].hex;
+    document.getElementById('dotText').style.background = palette[cfg.text].hex;
+
+    const mainTxt = document.getElementById('mainHatNumberText');
+    const shineTxt = document.getElementById('mainHatNumberShine');
+    mainTxt.textContent = currentHatNum;
+    shineTxt.textContent = currentHatNum;
+    const isTwoDigit = currentHatNum >= 10;
+    const fontSize = isTwoDigit ? '135' : '165';
+    const yPos = isTwoDigit ? '365' : '375';
+    [mainTxt, shineTxt].forEach(el => { el.setAttribute('font-size', fontSize); el.setAttribute('y', yPos); });
+
+    document.getElementById('mainRibbonLeft').setAttribute('fill', palette[cfg.ribbon].hex);
+    document.getElementById('mainRibbonRight').setAttribute('fill', palette[cfg.ribbon].hex);
+    document.getElementById('mainPomponGroup').setAttribute('fill', palette[cfg.pompon].hex);
+    mainTxt.setAttribute('fill', palette[cfg.text].hex);
+
+    const mainBody = document.getElementById('mainHatBody');
+    if (cfg.textureType === 0) {
+      mainBody.setAttribute('fill', palette[cfg.fabric].hex);
+    } else if (cfg.textureType === 1) {
+      document.getElementById('mainSmallPotiBg').setAttribute('fill', palette[cfg.fabric].hex);
+      mainBody.setAttribute('fill', 'url(#mainSmallPoti)');
+    } else {
+      document.getElementById('mainLargePotiBg').setAttribute('fill', palette[cfg.fabric].hex);
+      mainBody.setAttribute('fill', 'url(#mainLargePoti)');
+    }
+
+    for (let i = 1; i <= 12; i++) {
+      const c = hatConfigs[i];
+      const itemEl = document.getElementById(`m-item-${i}`);
+      itemEl.classList.toggle('active', i === currentHatNum);
+
+      document.getElementById(`m-ribbonLeft-${i}`).setAttribute('fill', palette[c.ribbon].hex);
+      document.getElementById(`m-ribbonRight-${i}`).setAttribute('fill', palette[c.ribbon].hex);
+      document.getElementById(`m-pompon-${i}`).setAttribute('fill', palette[c.pompon].hex);
+      document.getElementById(`m-text-${i}`).setAttribute('fill', palette[c.text].hex);
+
+      const miniBody = document.getElementById(`m-body-${i}`);
+      if (c.textureType === 0) {
+        miniBody.setAttribute('fill', palette[c.fabric].hex);
+      } else if (c.textureType === 1) {
+        document.getElementById(`m-sbase-${i}`).setAttribute('fill', palette[c.fabric].hex);
+        miniBody.setAttribute('fill', `url(#m-spoti-${i})`);
+      } else {
+        document.getElementById(`m-lbase-${i}`).setAttribute('fill', palette[c.fabric].hex);
+        miniBody.setAttribute('fill', `url(#m-lpoti-${i})`);
+      }
+    }
+  }
+
+  /* ================= KOMBİNE 13'LÜ MATRİS ================= */
+  const matrixGrid = document.getElementById('matrixGrid');
+
+  function initCombinedMatrix() {
+    matrixGrid.innerHTML = '';
+
+    const bebekItem = document.createElement('div');
+    bebekItem.className = 'matrix-item bebek-item';
+    bebekItem.tabIndex = 0;
+    bebekItem.setAttribute('role', 'button');
+    bebekItem.setAttribute('aria-label', 'Bebek Şapkasına git');
+    bebekItem.onclick = () => document.getElementById('bebekPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    bebekItem.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bebekItem.click(); } };
+    bebekItem.innerHTML = `
+      <svg viewBox="0 0 400 570" xmlns="http://www.w3.org/2000/svg">
+        <path id="m-bb-bottom" d="M 96.3 398.5 L 303.7 398.5 L 344 501 Q 200 525 56 501 Z" fill="#E3E5D2"/>
+        <path id="m-bb-top" d="M 200 135 L 96.3 398.5 L 303.7 398.5 Z" fill="#E3E5D2"/>
+        <path id="m-bb-sutasi" d="M 98.1 393.9 L 301.9 393.9 L 305.5 403.1 L 94.5 403.1 Z" fill="#E3E5D2"/>
+        <path id="m-bb-ribbonLeft" d="M 82 438 C 70 470, 85 520, 60 560 C 50 540, 55 490, 78 435 Z" fill="#E3E5D2"/>
+        <path id="m-bb-ribbonRight" d="M 318 438 C 330 470, 315 520, 340 560 C 350 540, 345 490, 322 435 Z" fill="#E3E5D2"/>
+        <g id="m-bb-pompon" fill="#E3E5D2">
+          <circle cx="200" cy="130" r="46"/>
+          <circle cx="200" cy="83" r="3.5"/><circle cx="200" cy="177" r="3.5"/>
+        </g>
+      </svg>
+      <div class="matrix-label">Bebek</div>
+    `;
+    matrixGrid.appendChild(bebekItem);
+
+    for (let i = 1; i <= 12; i++) {
+      const isTwoDigit = i >= 10;
+      const fontSize = isTwoDigit ? 135 : 165;
+      const yPos = isTwoDigit ? 365 : 375;
+      const item = document.createElement('div');
+      item.className = 'matrix-item';
+      item.id = `m-item-${i}`;
+      item.tabIndex = 0;
+      item.setAttribute('role', 'button');
+      item.setAttribute('aria-label', `Şapka ${i} seç`);
+      item.onclick = () => selectHatFromMatrix(i);
+      item.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectHatFromMatrix(i); } };
+
+      item.innerHTML = `
+        <svg viewBox="0 0 400 560" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="m-spoti-${i}" width="20" height="20" patternUnits="userSpaceOnUse">
+              <rect id="m-sbase-${i}" width="20" height="20" fill="#E3E5D2"/>
+              <rect width="10" height="20" fill="#ffffff" fill-opacity="0.35"/>
+              <rect width="20" height="10" fill="#ffffff" fill-opacity="0.35"/>
+            </pattern>
+            <pattern id="m-lpoti-${i}" width="40" height="40" patternUnits="userSpaceOnUse">
+              <rect id="m-lbase-${i}" width="40" height="40" fill="#E3E5D2"/>
+              <rect width="20" height="40" fill="#ffffff" fill-opacity="0.35"/>
+              <rect width="40" height="20" fill="#ffffff" fill-opacity="0.35"/>
+            </pattern>
+          </defs>
+          <path id="m-ribbonLeft-${i}" d="M 82 438 C 70 470, 85 520, 60 560 C 50 540, 55 490, 78 435 Z" fill="#E3E5D2"/>
+          <path id="m-ribbonRight-${i}" d="M 318 438 C 330 470, 315 520, 340 560 C 350 540, 345 490, 322 435 Z" fill="#E3E5D2"/>
+          <path id="m-body-${i}" d="M 80 440 Q 200 460 320 440 L 200 135 Z" fill="#E3E5D2"/>
+          <text id="m-text-${i}" x="200" y="${yPos}" text-anchor="middle" fill="#E3E5D2" font-family="Futura, sans-serif" font-weight="200" font-size="${fontSize}" letter-spacing="-2">${i}</text>
+          <g id="m-pompon-${i}" fill="#E3E5D2">
+            <circle cx="200" cy="130" r="46"/>
+            <circle cx="200" cy="83" r="3.5"/><circle cx="200" cy="177" r="3.5"/>
+          </g>
+        </svg>
+        <div class="matrix-label">No ${i}</div>
+      `;
+      matrixGrid.appendChild(item);
+    }
+  }
+
+  function updateCombinedMatrixBebek() {
+    document.getElementById('m-bb-bottom').setAttribute('fill', fabricColors[bbConfig.bottomFabricColor].hex);
+    document.getElementById('m-bb-top').setAttribute('fill', fabricColors[bbConfig.topFabricColor].hex);
+    document.getElementById('m-bb-sutasi').setAttribute('fill', suTasiColors[bbConfig.suTasiColor].hex);
+    document.getElementById('m-bb-ribbonLeft').setAttribute('fill', kurdeleColors[bbConfig.kurdeleColor].hex);
+    document.getElementById('m-bb-ribbonRight').setAttribute('fill', kurdeleColors[bbConfig.kurdeleColor].hex);
+    document.getElementById('m-bb-pompon').setAttribute('fill', pomponColors[bbConfig.pomponColor].hex);
+  }
+
+  /* ================= TEK ÜRETİM ÖZETİ (TÜM SET) ================= */
+  function combinedShowToast(msg) {
+    const t = document.getElementById('combinedToast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(combinedShowToast._timer);
+    combinedShowToast._timer = setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  function combinedToggleImportPanel(force) {
+    const panel = document.getElementById('combinedImportPanel');
+    const shouldOpen = force !== undefined ? force : !panel.classList.contains('open');
+    panel.classList.toggle('open', shouldOpen);
+    if (shouldOpen) document.getElementById('combinedImportText').focus();
+  }
+
+  function combinedCopySummary() {
+    const lines = [
+      "DERU — Tam Set Üretim Özeti (Bebek Şapkası + 1'den 12'ye)",
+      `Tarih: ${new Date().toLocaleDateString('tr-TR')}`,
+      '',
+      '[BEBEK ŞAPKASI]',
+      `İsim: ${bbConfig.name || '(belirtilmedi)'}`,
+      `Üst Kumaş: ${fabricColors[bbConfig.topFabricColor].name} (${bbExportTextureNames[bbConfig.topTexture]})`,
+      `Alt Kumaş: ${fabricColors[bbConfig.bottomFabricColor].name} (${bbExportTextureNames[bbConfig.bottomTexture]})`,
+      `Su Taşı: ${suTasiColors[bbConfig.suTasiColor].name}`,
+      `Ponpon: ${pomponColors[bbConfig.pomponColor].name}`,
+      `Kurdele: ${kurdeleColors[bbConfig.kurdeleColor].name}`,
+      `İsim Rengi (İplik): ${threadColors[bbConfig.threadColor].name}`,
+      '',
+      "[1'DEN 12'YE ŞAPKALAR]"
+    ];
+    for (let i = 1; i <= 12; i++) {
+      const c = hatConfigs[i];
+      lines.push(`No ${i}: Kumaş ${palette[c.fabric].name} (${textures[c.textureType]}) · Ponpon ${palette[c.pompon].name} · Kurdele ${palette[c.ribbon].name} · Sayı ${palette[c.text].name}`);
+    }
+    const text = lines.join('\n');
+    copyTextToClipboard(text, () => combinedShowToast('13 şapkanın tamamı tek özet olarak panoya kopyalandı.'));
+  }
+
+  function combinedImportSummary() {
+    const raw = document.getElementById('combinedImportText').value;
+    if (!raw.trim()) { combinedShowToast('Önce bir üretim özeti yapıştırın.'); return; }
+
+    const warnings = [];
+
+    // --- Bebek Şapkası bölümü ---
+    const bebekMatch = raw.match(/\[BEBEK[^\]]*\]([\s\S]*?)(?=\[|$)/i);
+    if (bebekMatch) {
+      const nextBb = bbDefaultConfig();
+      const bLines = bebekMatch[1].split('\n');
+      for (const line of bLines) {
+        const idx = line.indexOf(':');
+        if (idx === -1) continue;
+        const key = line.slice(0, idx).trim().toLowerCase();
+        const value = line.slice(idx + 1).trim();
+        if (!value) continue;
+
+        if (key === 'i̇sim' || key === 'isim') {
+          nextBb.name = value === '(belirtilmedi)' ? '' : value;
+        } else if (key === 'üst kumaş' || key === 'ust kumas') {
+          const m = value.match(/^(.*?)\s*\((.*?)\)\s*$/);
+          const colorName = m ? m[1] : value;
+          const textureName = m ? m[2] : null;
+          const ci = findColorIndexByName(fabricColors, colorName);
+          if (ci >= 0) nextBb.topFabricColor = ci; else warnings.push(`Üst Kumaş rengi "${colorName}" bulunamadı`);
+          if (textureName) { const ti = findTextureIndexByName(bbExportTextureNames, textureName); if (ti >= 0) nextBb.topTexture = ti; }
+          if (ci >= 0 && bbIsKirikBeyaz(ci)) nextBb.topTexture = 0;
+        } else if (key === 'alt kumaş' || key === 'alt kumas') {
+          const m = value.match(/^(.*?)\s*\((.*?)\)\s*$/);
+          const colorName = m ? m[1] : value;
+          const textureName = m ? m[2] : null;
+          const ci = findColorIndexByName(fabricColors, colorName);
+          if (ci >= 0) nextBb.bottomFabricColor = ci; else warnings.push(`Alt Kumaş rengi "${colorName}" bulunamadı`);
+          if (textureName) { const ti = findTextureIndexByName(bbExportTextureNames, textureName); if (ti >= 0) nextBb.bottomTexture = ti; }
+          if (ci >= 0 && bbIsKirikBeyaz(ci)) nextBb.bottomTexture = 0;
+        } else if (key === 'su taşı' || key === 'su tasi') {
+          const ci = findColorIndexByName(suTasiColors, value);
+          if (ci >= 0) nextBb.suTasiColor = ci; else warnings.push(`Su Taşı rengi "${value}" bulunamadı`);
+        } else if (key === 'ponpon') {
+          const ci = findColorIndexByName(pomponColors, value);
+          if (ci >= 0) nextBb.pomponColor = ci; else warnings.push(`Ponpon rengi "${value}" bulunamadı`);
+        } else if (key === 'kurdele') {
+          const ci = findColorIndexByName(kurdeleColors, value);
+          if (ci >= 0) nextBb.kurdeleColor = ci; else warnings.push(`Kurdele rengi "${value}" bulunamadı`);
+        } else if (key.startsWith('isim rengi') || key.startsWith('i̇sim rengi') || key === 'iplik rengi' || key === 'i̇plik rengi') {
+          const ci = findColorIndexByName(threadColors, value);
+          if (ci >= 0) nextBb.threadColor = ci; else warnings.push(`İsim rengi "${value}" bulunamadı`);
+        }
+      }
+      bbConfig = nextBb;
+      document.getElementById('bbNameInput').value = bbConfig.name;
+    }
+
+    // --- 1'den 12'ye şapkalar bölümü ---
+    const standardMatch = raw.match(/\[1[^\]]*\]([\s\S]*)$/i);
+    if (standardMatch) {
+      const lineRe = /No\s*(\d+):\s*Kumaş\s+(.+?)\s*\((.+?)\)\s*·\s*Ponpon\s+(.+?)\s*·\s*Kurdele\s+(.+?)\s*·\s*Sayı\s+(.+?)\s*$/i;
+      const sLines = standardMatch[1].split('\n');
+      for (const line of sLines) {
+        const m = line.match(lineRe);
+        if (!m) continue;
+        const num = parseInt(m[1], 10);
+        if (num < 1 || num > 12) continue;
+        const next = defaultConfig();
+
+        const fi = findColorIndexByName(palette, m[2]);
+        if (fi >= 0) next.fabric = fi; else warnings.push(`No ${num}: Kumaş rengi "${m[2]}" bulunamadı`);
+        const ti = findTextureIndexByName(textures, m[3]);
+        if (ti >= 0) next.textureType = ti;
+        if (fi >= 0 && palette[fi].name === KIRIK_BEYAZ) next.textureType = 0;
+
+        const pi = findColorIndexByName(palette, m[4]);
+        if (pi >= 0) next.pompon = pi; else warnings.push(`No ${num}: Ponpon rengi "${m[4]}" bulunamadı`);
+        const ri = findColorIndexByName(palette, m[5]);
+        if (ri >= 0) next.ribbon = ri; else warnings.push(`No ${num}: Kurdele rengi "${m[5]}" bulunamadı`);
+        const txi = findColorIndexByName(palette, m[6]);
+        if (txi >= 0) next.text = txi; else warnings.push(`No ${num}: Sayı rengi "${m[6]}" bulunamadı`);
+
+        hatConfigs[num] = next;
+      }
+    }
+
+    bbRenderUI();
+    renderUI();
+    bbQueueSave();
+    queueSave();
+    combinedToggleImportPanel(false);
+    combinedShowToast(warnings.length ? `Uygulandı, ancak: ${warnings[0]}` : 'Tüm set (13 şapka) özetten yeniden oluşturuldu.');
+  }
+
+  (async function start() {
+    initCombinedMatrix();
+    await Promise.all([loadState(), bbLoadState()]);
+    renderUI();
+    bbRenderUI();
+  })();
+</script>
+</body>
+</html>
