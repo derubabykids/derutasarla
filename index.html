@@ -8,13 +8,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper: #FAF6EF;
-    --paper-card: #FFFFFF;
-    --ink: #241F1B;
-    --ink-soft: #6B615A;
-    --line: #E7DFD2;
-    --wine: #681F23;
-    --wine-soft: #F3E4E2;
+    --paper: #F1E8DC;
+    --paper-card: #FDFAF4;
+    --ink: #5B4433;
+    --ink-soft: #8A7361;
+    --line: #E3D5C3;
+    --wine: #A65C3B;
+    --wine-soft: #F0E0D3;
     --brass: #B08D57;
     --brass-soft: #F3EADA;
     --radius-lg: 22px;
@@ -23,11 +23,11 @@
   body{
     font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background:
-      radial-gradient(circle at 15% 8%, rgba(104,31,35,0.05), transparent 45%),
-      radial-gradient(circle at 90% 90%, rgba(176,141,87,0.07), transparent 40%),
+      radial-gradient(circle at 15% 8%, rgba(166,92,59,0.06), transparent 45%),
+      radial-gradient(circle at 90% 90%, rgba(176,141,87,0.09), transparent 40%),
       var(--paper);
     min-height:100vh; display:flex; justify-content:center;
-    padding:36px 18px 60px; color:var(--ink);
+    padding:36px 10px 60px; color:var(--ink);
   }
   button, textarea, input{ font-family:inherit; }
   button:focus-visible, input:focus-visible, textarea:focus-visible, .matrix-item:focus-visible{
@@ -37,24 +37,13 @@
   .app{ width:100%; max-width:680px; display:flex; flex-direction:column; gap:26px; }
 
   .brand-header{ text-align:center; padding-bottom:2px; }
-  .brand-mark{ font-family:'Fraunces', serif; font-weight:600; font-size:34px; letter-spacing:2px; color:var(--ink); }
-  .brand-mark span{ color:var(--wine); }
-  .brand-sub{ font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); margin-top:4px; }
+  .brand-logo{ width:150px; height:auto; display:block; margin:0 auto; }
+  .brand-tool-label{ font-size:10.5px; font-weight:600; letter-spacing:.5px; color:var(--ink-soft); opacity:.75; margin-top:10px; text-transform:uppercase; }
 
-  .section-heading{
-    font-family:'Fraunces', serif; font-weight:600; font-size:19px; color:var(--ink);
-    display:flex; align-items:center; gap:10px;
-  }
-  .section-heading .num{
-    width:26px; height:26px; border-radius:50%; background:var(--wine); color:#fff;
-    font-family:'Inter'; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;
-  }
+  .section-heading{ font-family:'Fraunces', serif; font-weight:600; font-size:19px; color:var(--ink); display:flex; align-items:center; gap:10px; }
+  .section-heading .num{ width:26px; height:26px; border-radius:50%; background:var(--wine); color:#fff; font-family:'Inter'; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 
-  .panel{
-    background:var(--paper-card); border:1px solid var(--line); border-radius:var(--radius-lg);
-    box-shadow:0 18px 45px rgba(36,31,27,0.07); padding:26px 22px;
-    display:flex; flex-direction:column; gap:20px;
-  }
+  .panel{ background:var(--paper-card); border:1px solid var(--line); border-radius:var(--radius-lg); box-shadow:0 18px 45px rgba(36,31,27,0.07); padding:24px 16px; display:flex; flex-direction:column; gap:18px; }
 
   .name-row{ display:flex; align-items:center; gap:10px; background:var(--wine-soft); padding:12px 16px; border-radius:16px; }
   .name-row label{ font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--wine); flex-shrink:0; }
@@ -63,28 +52,48 @@
   .name-hint{ font-size:10.5px; color:var(--ink-soft); margin-top:-10px; }
 
   .selector-row{ display:flex; align-items:center; justify-content:space-between; background:var(--wine-soft); padding:10px 10px 10px 18px; border-radius:16px; }
+  .special-row{ background:var(--brass-soft); border:1px solid var(--brass); border-radius:14px; padding:11px 16px; font-size:12.5px; font-weight:600; color:var(--ink); }
+  .special-row input[type="checkbox"]{ width:17px; height:17px; accent-color:var(--wine); flex-shrink:0; }
   .selector-label{ font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--wine); }
   .selector-value{ font-family:'Fraunces', serif; font-size:19px; font-weight:600; color:var(--ink); flex:1; text-align:center; }
   .round-btn{ background:var(--paper-card); border:1px solid var(--line); border-radius:50%; width:38px; height:38px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; color:var(--wine); transition:transform .12s ease, background .12s ease; }
   .round-btn:hover{ background:var(--wine); color:#fff; transform:scale(1.08); }
   .round-btn:active{ transform:scale(0.93); }
 
-  .preview-wrap{ display:flex; justify-content:center; padding:6px 0 0; }
-  svg.main-preview{ width:100%; max-width:250px; height:auto; filter:drop-shadow(0 14px 20px rgba(36,31,27,0.14)); }
+  /* Önizleme: şapka HER ZAMAN tam görünür kalır — hiçbir kontrol üzerine
+     binmez. Tüm kontroller kendi ızgara hücresinde durur (üst üste binme
+     imkansız). Mobilde görsel üstte, kartlar altında 2'li ızgarada akar;
+     geniş ekranda kartlar görselin sağına/soluna, ilgili bölgeyle aynı
+     satırda kayar — şapkanın tam ortada olması şart değil. */
+  /* Şapka bir kenara yaslı durur (ortalanması şart değil); kontroller
+     TEK bir dikey sütunda, şapkanın anatomik sırasına göre (üstten alta)
+     dizilir — böylece her ok, değiştirdiği bölgenin hemen üstünde/altında
+     kalır. Tamamen normal akış olduğu için hiçbir ekran genişliğinde
+     üst üste binme ya da taşma olmaz. */
+  .preview-stage{ display:flex; align-items:stretch; gap:12px; padding:4px 2px; }
+  .chip-col{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; justify-content:space-between; gap:6px; }
+  .preview-box{ position:relative; flex:0 0 auto; width:40%; max-width:170px; aspect-ratio:400/570; align-self:center; }
+  svg.main-preview{ position:absolute; inset:0; width:100%; height:100%; filter:drop-shadow(0 14px 20px rgba(36,31,27,0.14)); }
 
-  .section-label{ font-size:10.5px; font-weight:800; color:var(--brass); text-transform:uppercase; letter-spacing:1px; margin:4px 0 -6px 2px; }
+  /* Her kontrol kartı: normal akışta, görsele hiç değmez */
+  .side-chip{
+    background:var(--paper-card); border:1px solid var(--line); border-radius:13px;
+    padding:7px 9px; box-shadow:0 3px 8px rgba(36,31,27,0.05);
+    display:flex; align-items:center; gap:8px;
+  }
+  .side-chip-tag{ font-size:9px; font-weight:800; color:var(--brass); text-transform:uppercase; letter-spacing:.4px; width:52px; flex-shrink:0; line-height:1.25; }
+  .side-chip-body{ display:flex; flex-direction:column; gap:3px; flex:1; min-width:0; }
+  .side-chip-value{ display:flex; align-items:center; gap:6px; }
+  .side-chip .dot{ width:16px; height:16px; border-radius:50%; border:1px solid rgba(0,0,0,0.15); flex-shrink:0; }
+  .side-chip .tex-icon{ font-size:13px; color:var(--brass); flex-shrink:0; width:15px; text-align:center; }
+  .side-chip .value{ font-size:10.5px; font-weight:700; color:var(--ink); line-height:1.2; }
+  .side-chip button{ background:none; border:none; cursor:pointer; font-size:16px; color:var(--ink-soft); padding:1px 3px; transition:color .1s, transform .1s; flex-shrink:0; }
+  .side-chip button:hover{ color:var(--wine); transform:scale(1.15); }
+  .side-chip button:disabled{ color:#D8D0C4; cursor:not-allowed; }
+  .side-chip button:disabled:hover{ transform:none; }
 
-  .control-panel{ display:flex; flex-direction:column; gap:8px; }
-  .control-row{ display:flex; align-items:center; gap:8px; background:var(--paper); border:1px solid var(--line); padding:9px 14px; border-radius:12px; }
-  .control-label{ font-size:10.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.5px; width:104px; flex-shrink:0; }
-  .swatch{ width:15px; height:15px; border-radius:50%; flex-shrink:0; border:1px solid rgba(0,0,0,0.12); }
-  .nav-btn{ background:none; border:none; cursor:pointer; font-size:15px; color:var(--ink-soft); padding:4px 8px; transition:color .1s, transform .1s; }
-  .nav-btn:hover{ color:var(--wine); transform:scale(1.15); }
-  .nav-btn:disabled{ color:#D8D0C4; cursor:not-allowed; }
-  .nav-btn:disabled:hover{ transform:none; }
-  .val-text{ font-size:12.5px; font-weight:600; color:var(--ink); flex:1; text-align:center; }
-  .val-text.locked{ color:var(--ink-soft); }
-  .control-row.locked{ opacity:.75; }
+  .legend{ font-size:10.5px; color:var(--ink-soft); text-align:center; line-height:1.7; padding:0 6px; }
+  .legend b{ color:var(--ink); font-weight:700; }
 
   .toolbar{ display:flex; gap:8px; flex-wrap:wrap; }
   .tool-btn{ flex:1; min-width:120px; background:var(--paper); border:1px solid var(--line); color:var(--ink); font-size:12px; font-weight:700; padding:11px 10px; border-radius:12px; cursor:pointer; letter-spacing:.2px; transition:all .12s ease; }
@@ -117,8 +126,8 @@
 
 <div class="app">
   <div class="brand-header">
-    <div class="brand-mark">DE<span>RU</span></div>
-    <div class="brand-sub">Bebek Şapkası &amp; 12'li Set · Tasarım Paneli</div>
+    <img class="brand-logo" src="data:image/png;base64,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" alt="DERU baby | kids">
+    <div class="brand-tool-label">Bebek Şapkası &amp; 12'li Set · Tasarım Paneli</div>
   </div>
 
   <!-- ============ 1) BEBEK ŞAPKASI ============ -->
@@ -128,9 +137,96 @@
       <label for="bbNameInput">İsim</label>
       <input id="bbNameInput" type="text" maxlength="24" placeholder="Nakış için isim yazın (örn. Ece Su)" oninput="bbHandleNameChange(this.value)">
     </div>
-    <div class="name-hint">İki kelimeli isimlerde ikinci kelime alt satıra iner (örn. "Ece Su"). Tek kelimelik isimler asla alt satıra inmez.</div>
+    <div class="name-hint">İki kelimeli isimlerde ikinci kelime alt satıra iner. Tek kelimelik isimler asla alt satıra inmez.</div>
 
-    <div class="preview-wrap">
+    <div class="preview-stage">
+      <div class="chip-col">
+        <div class="side-chip">
+          <div class="side-chip-tag">Ponpon</div>
+          <div class="side-chip-body">
+            <div class="side-chip-value">
+              <button onclick="bbHandleColorChange('pomponColor', pomponColors, -1)" aria-label="Önceki ponpon rengi">◀</button>
+              <span class="dot" id="bbDotPompon"></span>
+              <button onclick="bbHandleColorChange('pomponColor', pomponColors, 1)" aria-label="Sonraki ponpon rengi">▶</button>
+              <span class="value" id="bbLabelPompon"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-chip">
+          <div class="side-chip-tag">Üst Kumaş</div>
+          <div class="side-chip-body">
+            <div class="side-chip-value">
+              <button onclick="bbHandleColorChange('topFabricColor', fabricColors, -1, 'topTexture')" aria-label="Önceki üst kumaş rengi">◀</button>
+              <span class="dot" id="bbDotTopFabric"></span>
+              <button onclick="bbHandleColorChange('topFabricColor', fabricColors, 1, 'topTexture')" aria-label="Sonraki üst kumaş rengi">▶</button>
+              <span class="value" id="bbLabelTopFabric"></span>
+            </div>
+            <div class="side-chip-value">
+              <button id="bbTopTexturePrev" onclick="bbHandleTextureChange('top', -1)" aria-label="Önceki üst kumaş deseni">◀</button>
+              <span class="tex-icon" id="bbTexIconTop"></span>
+              <button id="bbTopTextureNext" onclick="bbHandleTextureChange('top', 1)" aria-label="Sonraki üst kumaş deseni">▶</button>
+              <span class="value" id="bbTexLabelTop"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-chip">
+          <div class="side-chip-tag">İsim (İplik)</div>
+          <div class="side-chip-body">
+            <div class="side-chip-value">
+              <button onclick="bbHandleColorChange('threadColor', threadColors, -1)" aria-label="Önceki iplik rengi">◀</button>
+              <span class="dot" id="bbDotThread"></span>
+              <button onclick="bbHandleColorChange('threadColor', threadColors, 1)" aria-label="Sonraki iplik rengi">▶</button>
+              <span class="value" id="bbLabelThread"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-chip">
+          <div class="side-chip-tag">Su Taşı</div>
+          <div class="side-chip-body">
+            <div class="side-chip-value">
+              <button onclick="bbHandleColorChange('suTasiColor', suTasiColors, -1)" aria-label="Önceki su taşı rengi">◀</button>
+              <span class="dot" id="bbDotSuTasi"></span>
+              <button onclick="bbHandleColorChange('suTasiColor', suTasiColors, 1)" aria-label="Sonraki su taşı rengi">▶</button>
+              <span class="value" id="bbLabelSuTasi"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-chip">
+          <div class="side-chip-tag">Alt Kumaş</div>
+          <div class="side-chip-body">
+            <div class="side-chip-value">
+              <button onclick="bbHandleColorChange('bottomFabricColor', fabricColors, -1, 'bottomTexture')" aria-label="Önceki alt kumaş rengi">◀</button>
+              <span class="dot" id="bbDotBottomFabric"></span>
+              <button onclick="bbHandleColorChange('bottomFabricColor', fabricColors, 1, 'bottomTexture')" aria-label="Sonraki alt kumaş rengi">▶</button>
+              <span class="value" id="bbLabelBottomFabric"></span>
+            </div>
+            <div class="side-chip-value">
+              <button id="bbBottomTexturePrev" onclick="bbHandleTextureChange('bottom', -1)" aria-label="Önceki alt kumaş deseni">◀</button>
+              <span class="tex-icon" id="bbTexIconBottom"></span>
+              <button id="bbBottomTextureNext" onclick="bbHandleTextureChange('bottom', 1)" aria-label="Sonraki alt kumaş deseni">▶</button>
+              <span class="value" id="bbTexLabelBottom"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-chip">
+          <div class="side-chip-tag">Kurdele</div>
+          <div class="side-chip-body">
+            <div class="side-chip-value">
+              <button onclick="bbHandleColorChange('kurdeleColor', kurdeleColors, -1)" aria-label="Önceki kurdele rengi">◀</button>
+              <span class="dot" id="bbDotKurdele"></span>
+              <button onclick="bbHandleColorChange('kurdeleColor', kurdeleColors, 1)" aria-label="Sonraki kurdele rengi">▶</button>
+              <span class="value" id="bbLabelKurdele"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-box">
       <svg class="main-preview" viewBox="0 0 400 570" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="bbTopSmallPoti" width="16" height="16" patternUnits="userSpaceOnUse">
@@ -165,25 +261,14 @@
           </linearGradient>
         </defs>
 
-        <!-- 1. Alt Kumaş -->
         <path id="bbBottomFabric" d="M 96.3 398.5 L 303.7 398.5 L 344 501 Q 200 525 56 501 Z" fill="#E3E5D2"/>
-
-        <!-- 2. Üst Kumaş -->
         <path id="bbTopFabric" d="M 200 135 L 96.3 398.5 L 303.7 398.5 Z" fill="#E3E5D2"/>
         <path d="M 56 501 Q 200 525 344 501 L 200 135 Z" fill="url(#bbConeShadow)" style="mix-blend-mode:multiply; pointer-events:none;"/>
-
-        <!-- 3. Su Taşı -->
         <path id="bbSuTasi" d="M 98.1 393.9 L 301.9 393.9 L 305.5 403.1 L 94.5 403.1 Z" fill="url(#bbSuTasiPattern)"/>
-
-        <!-- 4. İsim -->
         <text id="bbNameShadow" text-anchor="middle" font-family="'Dancing Script', cursive" font-weight="700" fill="#000000"></text>
         <text id="bbNameText" text-anchor="middle" font-family="'Dancing Script', cursive" font-weight="700" fill="#E3E5D2"></text>
-
-        <!-- 5. Kurdele -->
         <path id="bbRibbonLeft" d="M 82 438 C 70 470, 85 520, 60 560 C 50 540, 55 490, 78 435 Z" fill="#E3E5D2"/>
         <path id="bbRibbonRight" d="M 318 438 C 330 470, 315 520, 340 560 C 350 540, 345 490, 322 435 Z" fill="#E3E5D2"/>
-
-        <!-- 6. Ponpon -->
         <g id="bbPomponGroup" fill="#E3E5D2">
           <circle cx="200" cy="130" r="46"/>
           <circle cx="200" cy="83" r="3.5"/><circle cx="200" cy="177" r="3.5"/><circle cx="153" cy="130" r="3.5"/><circle cx="247" cy="130" r="3.5"/>
@@ -194,73 +279,10 @@
           <circle cx="154" cy="120" r="3.5"/><circle cx="246" cy="120" r="3.5"/><circle cx="154" cy="140" r="3.5"/><circle cx="246" cy="140" r="3.5"/>
         </g>
       </svg>
-    </div>
-
-    <div class="section-label">Üst Kumaş</div>
-    <div class="control-panel">
-      <div class="control-row" id="bbTopTextureRow">
-        <span class="control-label">Deseni</span>
-        <button class="nav-btn" id="bbTopTexturePrev" onclick="bbHandleTextureChange('top', -1)" aria-label="Önceki desen">◀</button>
-        <span class="val-text" id="bbValTopTexture">Düz Kumaş</span>
-        <button class="nav-btn" id="bbTopTextureNext" onclick="bbHandleTextureChange('top', 1)" aria-label="Sonraki desen">▶</button>
-      </div>
-      <div class="control-row">
-        <span class="control-label">Rengi</span>
-        <span class="swatch" id="bbDotTopFabric"></span>
-        <button class="nav-btn" onclick="bbHandleColorChange('topFabricColor', fabricColors, -1, 'topTexture')" aria-label="Önceki renk">◀</button>
-        <span class="val-text" id="bbValTopFabric">Kırık Beyaz</span>
-        <button class="nav-btn" onclick="bbHandleColorChange('topFabricColor', fabricColors, 1, 'topTexture')" aria-label="Sonraki renk">▶</button>
       </div>
     </div>
 
-    <div class="section-label">Alt Kumaş</div>
-    <div class="control-panel">
-      <div class="control-row" id="bbBottomTextureRow">
-        <span class="control-label">Deseni</span>
-        <button class="nav-btn" id="bbBottomTexturePrev" onclick="bbHandleTextureChange('bottom', -1)" aria-label="Önceki desen">◀</button>
-        <span class="val-text" id="bbValBottomTexture">Düz Kumaş</span>
-        <button class="nav-btn" id="bbBottomTextureNext" onclick="bbHandleTextureChange('bottom', 1)" aria-label="Sonraki desen">▶</button>
-      </div>
-      <div class="control-row">
-        <span class="control-label">Rengi</span>
-        <span class="swatch" id="bbDotBottomFabric"></span>
-        <button class="nav-btn" onclick="bbHandleColorChange('bottomFabricColor', fabricColors, -1, 'bottomTexture')" aria-label="Önceki renk">◀</button>
-        <span class="val-text" id="bbValBottomFabric">Kırık Beyaz</span>
-        <button class="nav-btn" onclick="bbHandleColorChange('bottomFabricColor', fabricColors, 1, 'bottomTexture')" aria-label="Sonraki renk">▶</button>
-      </div>
-    </div>
-
-    <div class="section-label">Diğer Renkler</div>
-    <div class="control-panel">
-      <div class="control-row">
-        <span class="control-label">Su Taşı</span>
-        <span class="swatch" id="bbDotSuTasi"></span>
-        <button class="nav-btn" onclick="bbHandleColorChange('suTasiColor', suTasiColors, -1)" aria-label="Önceki renk">◀</button>
-        <span class="val-text" id="bbValSuTasi">Kırık Beyaz</span>
-        <button class="nav-btn" onclick="bbHandleColorChange('suTasiColor', suTasiColors, 1)" aria-label="Sonraki renk">▶</button>
-      </div>
-      <div class="control-row">
-        <span class="control-label">Ponpon</span>
-        <span class="swatch" id="bbDotPompon"></span>
-        <button class="nav-btn" onclick="bbHandleColorChange('pomponColor', pomponColors, -1)" aria-label="Önceki renk">◀</button>
-        <span class="val-text" id="bbValPompon">Kırık Beyaz</span>
-        <button class="nav-btn" onclick="bbHandleColorChange('pomponColor', pomponColors, 1)" aria-label="Sonraki renk">▶</button>
-      </div>
-      <div class="control-row">
-        <span class="control-label">Kurdele</span>
-        <span class="swatch" id="bbDotKurdele"></span>
-        <button class="nav-btn" onclick="bbHandleColorChange('kurdeleColor', kurdeleColors, -1)" aria-label="Önceki renk">◀</button>
-        <span class="val-text" id="bbValKurdele">Kırık Beyaz</span>
-        <button class="nav-btn" onclick="bbHandleColorChange('kurdeleColor', kurdeleColors, 1)" aria-label="Sonraki renk">▶</button>
-      </div>
-      <div class="control-row">
-        <span class="control-label">İsim (İplik)</span>
-        <span class="swatch" id="bbDotThread"></span>
-        <button class="nav-btn" onclick="bbHandleColorChange('threadColor', threadColors, -1)" aria-label="Önceki renk">◀</button>
-        <span class="val-text" id="bbValThread">Kırık Beyaz</span>
-        <button class="nav-btn" onclick="bbHandleColorChange('threadColor', threadColors, 1)" aria-label="Sonraki renk">▶</button>
-      </div>
-    </div>
+    <div class="legend" id="bbLegend"></div>
 
     <div class="toolbar">
       <button class="tool-btn" onclick="bbResetAll()">Bebek Şapkasını Sıfırla</button>
@@ -279,7 +301,71 @@
       <button class="round-btn" onclick="changeHatNumber(1)" aria-label="Sonraki şapka">▶</button>
     </div>
 
-    <div class="preview-wrap">
+    <div class="special-row" id="hat6Special" style="display:none;">
+      <label class="switch-label" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+        <input type="checkbox" id="hat6HalfToggle" onchange="toggleHat6Half(this.checked)">
+        <span>Bu şapkada "6" yerine "1/2" yazsın</span>
+      </label>
+    </div>
+
+    <div class="preview-stage">
+      <div class="chip-col">
+        <div class="side-chip">
+          <div class="side-chip-tag">Ponpon</div>
+          <div class="side-chip-body">
+            <div class="side-chip-value">
+              <button onclick="handleColorChange('pompon', -1)" aria-label="Önceki ponpon rengi">◀</button>
+              <span class="dot" id="dotPompon"></span>
+              <button onclick="handleColorChange('pompon', 1)" aria-label="Sonraki ponpon rengi">▶</button>
+              <span class="value" id="labelPompon"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-chip">
+          <div class="side-chip-tag">Kumaş</div>
+          <div class="side-chip-body">
+            <div class="side-chip-value">
+              <button onclick="handleColorChange('fabric', -1)" aria-label="Önceki kumaş rengi">◀</button>
+              <span class="dot" id="dotFabric"></span>
+              <button onclick="handleColorChange('fabric', 1)" aria-label="Sonraki kumaş rengi">▶</button>
+              <span class="value" id="labelFabric"></span>
+            </div>
+            <div class="side-chip-value">
+              <button id="textureBtnPrev" onclick="handleTextureChange(-1)" aria-label="Önceki kumaş deseni">◀</button>
+              <span class="tex-icon" id="texIconStandard"></span>
+              <button id="textureBtnNext" onclick="handleTextureChange(1)" aria-label="Sonraki kumaş deseni">▶</button>
+              <span class="value" id="texLabelStandard"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-chip">
+          <div class="side-chip-tag">Sayı</div>
+          <div class="side-chip-body">
+            <div class="side-chip-value">
+              <button onclick="handleColorChange('text', -1)" aria-label="Önceki sayı rengi">◀</button>
+              <span class="dot" id="dotText"></span>
+              <button onclick="handleColorChange('text', 1)" aria-label="Sonraki sayı rengi">▶</button>
+              <span class="value" id="labelText"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-chip">
+          <div class="side-chip-tag">Kurdele</div>
+          <div class="side-chip-body">
+            <div class="side-chip-value">
+              <button onclick="handleColorChange('ribbon', -1)" aria-label="Önceki kurdele rengi">◀</button>
+              <span class="dot" id="dotRibbon"></span>
+              <button onclick="handleColorChange('ribbon', 1)" aria-label="Sonraki kurdele rengi">▶</button>
+              <span class="value" id="labelRibbon"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-box">
       <svg class="main-preview" viewBox="0 0 400 570" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="mainSmallPoti" width="16" height="16" patternUnits="userSpaceOnUse">
@@ -306,13 +392,10 @@
 
         <path id="mainRibbonLeft" d="M 82 438 C 70 470, 85 520, 60 560 C 50 540, 55 490, 78 435 Z" fill="#E3E5D2"/>
         <path id="mainRibbonRight" d="M 318 438 C 330 470, 315 520, 340 560 C 350 540, 345 490, 322 435 Z" fill="#E3E5D2"/>
-
         <path id="mainHatBody" d="M 80 440 Q 200 460 320 440 L 200 135 Z" fill="#E3E5D2"/>
         <path d="M 80 440 Q 200 460 320 440 L 200 135 Z" fill="url(#coneShadow)" style="mix-blend-mode:multiply; pointer-events:none;"/>
-
         <text id="mainHatNumberText" x="200" y="375" text-anchor="middle" fill="#E3E5D2" font-family="Futura, 'Century Gothic', sans-serif" font-weight="200" font-size="165" letter-spacing="-2">1</text>
         <text x="200" y="375" text-anchor="middle" fill="url(#brassShine)" font-family="Futura, 'Century Gothic', sans-serif" font-weight="200" font-size="165" letter-spacing="-2" style="pointer-events:none;" id="mainHatNumberShine">1</text>
-
         <g id="mainPomponGroup" fill="#E3E5D2">
           <circle cx="200" cy="130" r="46"/>
           <circle cx="200" cy="83" r="3.5"/><circle cx="200" cy="177" r="3.5"/><circle cx="153" cy="130" r="3.5"/><circle cx="247" cy="130" r="3.5"/>
@@ -323,44 +406,10 @@
           <circle cx="154" cy="120" r="3.5"/><circle cx="246" cy="120" r="3.5"/><circle cx="154" cy="140" r="3.5"/><circle cx="246" cy="140" r="3.5"/>
         </g>
       </svg>
+      </div>
     </div>
 
-    <div class="control-panel">
-      <div class="control-row" id="textureRow">
-        <span class="control-label">Kumaş Deseni</span>
-        <button class="nav-btn" id="textureBtnPrev" onclick="handleTextureChange(-1)" aria-label="Önceki desen">◀</button>
-        <span class="val-text" id="valTexture">Düz Kumaş</span>
-        <button class="nav-btn" id="textureBtnNext" onclick="handleTextureChange(1)" aria-label="Sonraki desen">▶</button>
-      </div>
-      <div class="control-row">
-        <span class="control-label">Kumaş Rengi</span>
-        <span class="swatch" id="dotFabric"></span>
-        <button class="nav-btn" onclick="handleColorChange('fabric', -1)" aria-label="Önceki renk">◀</button>
-        <span class="val-text" id="valFabric">Kırık Beyaz</span>
-        <button class="nav-btn" onclick="handleColorChange('fabric', 1)" aria-label="Sonraki renk">▶</button>
-      </div>
-      <div class="control-row">
-        <span class="control-label">Ponpon Rengi</span>
-        <span class="swatch" id="dotPompon"></span>
-        <button class="nav-btn" onclick="handleColorChange('pompon', -1)" aria-label="Önceki renk">◀</button>
-        <span class="val-text" id="valPompon">Kırık Beyaz</span>
-        <button class="nav-btn" onclick="handleColorChange('pompon', 1)" aria-label="Sonraki renk">▶</button>
-      </div>
-      <div class="control-row">
-        <span class="control-label">Kurdele Rengi</span>
-        <span class="swatch" id="dotRibbon"></span>
-        <button class="nav-btn" onclick="handleColorChange('ribbon', -1)" aria-label="Önceki renk">◀</button>
-        <span class="val-text" id="valRibbon">Kırık Beyaz</span>
-        <button class="nav-btn" onclick="handleColorChange('ribbon', 1)" aria-label="Sonraki renk">▶</button>
-      </div>
-      <div class="control-row">
-        <span class="control-label">Sayı Rengi</span>
-        <span class="swatch" id="dotText"></span>
-        <button class="nav-btn" onclick="handleColorChange('text', -1)" aria-label="Önceki renk">◀</button>
-        <span class="val-text" id="valText">Kırık Beyaz</span>
-        <button class="nav-btn" onclick="handleColorChange('text', 1)" aria-label="Sonraki renk">▶</button>
-      </div>
-    </div>
+    <div class="legend" id="legend"></div>
 
     <div class="toolbar">
       <button class="tool-btn" onclick="applyCurrentToAll()">Bu Tasarımı Tümüne Uygula</button>
@@ -399,48 +448,60 @@
 
 <script>
   /* ============================================================
-     RENK PALETLERİ (Bebek Şapkası + 1'den 12'ye Şapkalar ortak kullanır)
+     RENK PALETLERİ
      Her aksesuar türü için ayrı ve bağımsız bir renk listesi.
      Yeni bir renk eklemek / bir paleti tamamen değiştirmek için
      ilgili diziye { name: "Renk Adı", hex: "#RRGGBB" } satırı
      ekleyin ya da diziyi tamamen değiştirin. Diğer paletleri
-     etkilemez. "Kırık Beyaz" adlı renk her zaman fabricColors
-     içinde bulunmalı (Düz Kumaş kısıtlaması bu isme bakar).
+     etkilemez. "Ekru" adlı renk her zaman fabricColors içinde
+     bulunmalı (Düz Kumaş kısıtlaması bu isme bakar).
      ============================================================ */
-  const fabricColors = [   // Kumaş renkleri (Bebek: üst+alt / Standart: gövde)
-    { name: "Kırık Beyaz", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
-    { name: "Şeker Pembe", hex: "#C97D90" }, { name: "Turuncu", hex: "#D74B15" },
-    { name: "Kırmızı", hex: "#880816" }, { name: "Bordo", hex: "#681F23" },
-    { name: "Sarı", hex: "#EBC912" }, { name: "Açık Yeşil", hex: "#70804A" },
-    { name: "Koyu Yeşil", hex: "#133022" }, { name: "Açık Mavi", hex: "#81A8BC" },
-    { name: "Lacivert", hex: "#0F1E30" }, { name: "Koyu Kahve", hex: "#635041" }
+  const fabricColors = [   // Kumaş Renkleri
+    { name: "Ekru", hex: "#E5E5D4" },
+    { name: "Açık Pembe", hex: "#ECBBB2" },
+    { name: "Şeker Pembe", hex: "#CA7C8F" },
+    { name: "Pudra Pembe", hex: "#C6A99C" },
+    { name: "Açık Mavi", hex: "#7FA8BC" },
+    { name: "Parlemet Mavi", hex: "#043780" },
+    { name: "Safir", hex: "#2F556F" },
+    { name: "Lacivert", hex: "#101F32" },
+    { name: "Turkuaz", hex: "#4D8487" },
+    { name: "Açık Yeşil", hex: "#708048" },
+    { name: "Koyu Yeşil", hex: "#163223" },
+    { name: "Açık Kahve", hex: "#8F7F64" },
+    { name: "Koyu Kahve", hex: "#685445" },
+    { name: "Sarı", hex: "#E9C70F" },
+    { name: "Hardal", hex: "#AB8738" },
+    { name: "Turuncu", hex: "#E15119" },
+    { name: "Kırmızı", hex: "#8D0917" },
+    { name: "Bordo", hex: "#6F2126" },
+    { name: "Patlıcan Rengi", hex: "#57343A" },
+    { name: "Mor", hex: "#673A65" },
+    { name: "Gri", hex: "#7D8688" },
+    { name: "Füme", hex: "#3B4141" },
+    { name: "Siyah", hex: "#161815" }
   ];
-  const pomponColors = [   // Ponpon renkleri
-    { name: "Kırık Beyaz", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
-    { name: "Şeker Pembe", hex: "#C97D90" }, { name: "Turuncu", hex: "#D74B15" },
-    { name: "Kırmızı", hex: "#880816" }, { name: "Bordo", hex: "#681F23" },
-    { name: "Sarı", hex: "#EBC912" }, { name: "Açık Yeşil", hex: "#70804A" },
-    { name: "Koyu Yeşil", hex: "#133022" }, { name: "Açık Mavi", hex: "#81A8BC" },
-    { name: "Lacivert", hex: "#0F1E30" }, { name: "Koyu Kahve", hex: "#635041" }
+
+  const pomponColors = [   // Ponpon Renkleri
+    { name: "Ekru Ponpon", hex: "#CDD2DF" },
+    { name: "Açık Kahve Ponpon", hex: "#AE927E" },
+    { name: "Toprak Kahve Ponpon", hex: "#744025" },
+    { name: "Pudra Pembe Ponpon", hex: "#D2B6CC" },
+    { name: "Şeker Pembe Ponpon", hex: "#FB95CC" },
+    { name: "Fuşya Ponpon", hex: "#BE52AA" },
+    { name: "Mor Ponpon", hex: "#604CBE" },
+    { name: "Koyu Mor Ponpon", hex: "#2E0F2A" },
+    { name: "Çim Yeşili Ponpon", hex: "#078056" },
+    { name: "Koyu Yeşil Ponpon", hex: "#32362C" },
+    { name: "Turuncu Ponpon", hex: "#E35246" },
+    { name: "Kırmızı Ponpon", hex: "#960B26" },
+    { name: "Açık Mavi Ponpon", hex: "#1A86DF" },
+    { name: "Lacivert Ponpon", hex: "#0C165D" },
+    { name: "Sarı Ponpon", hex: "#EBD53D" }
   ];
-  const threadColors = [   // İsim / sayı nakışı için iplik renkleri
-    { name: "Kırık Beyaz", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
-    { name: "Şeker Pembe", hex: "#C97D90" }, { name: "Turuncu", hex: "#D74B15" },
-    { name: "Kırmızı", hex: "#880816" }, { name: "Bordo", hex: "#681F23" },
-    { name: "Sarı", hex: "#EBC912" }, { name: "Açık Yeşil", hex: "#70804A" },
-    { name: "Koyu Yeşil", hex: "#133022" }, { name: "Açık Mavi", hex: "#81A8BC" },
-    { name: "Lacivert", hex: "#0F1E30" }, { name: "Koyu Kahve", hex: "#635041" }
-  ];
-  const suTasiColors = [   // Su Taşı (dekoratif bandı) renkleri
-    { name: "Kırık Beyaz", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
-    { name: "Şeker Pembe", hex: "#C97D90" }, { name: "Turuncu", hex: "#D74B15" },
-    { name: "Kırmızı", hex: "#880816" }, { name: "Bordo", hex: "#681F23" },
-    { name: "Sarı", hex: "#EBC912" }, { name: "Açık Yeşil", hex: "#70804A" },
-    { name: "Koyu Yeşil", hex: "#133022" }, { name: "Açık Mavi", hex: "#81A8BC" },
-    { name: "Lacivert", hex: "#0F1E30" }, { name: "Koyu Kahve", hex: "#635041" }
-  ];
-  const kurdeleColors = [   // Kurdele renkleri
-    { name: "Kırık Beyaz", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
+
+  const threadColors = [   // İsim / Sayı nakışı için iplik renkleri
+    { name: "Ekru", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
     { name: "Şeker Pembe", hex: "#C97D90" }, { name: "Turuncu", hex: "#D74B15" },
     { name: "Kırmızı", hex: "#880816" }, { name: "Bordo", hex: "#681F23" },
     { name: "Sarı", hex: "#EBC912" }, { name: "Açık Yeşil", hex: "#70804A" },
@@ -448,7 +509,26 @@
     { name: "Lacivert", hex: "#0F1E30" }, { name: "Koyu Kahve", hex: "#635041" }
   ];
 
-  const KIRIK_BEYAZ = "Kırık Beyaz";
+  const suTasiColors = [   // Su Taşı (dekoratif bandı) renkleri
+    { name: "Ekru", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
+    { name: "Şeker Pembe", hex: "#C97D90" }, { name: "Turuncu", hex: "#D74B15" },
+    { name: "Kırmızı", hex: "#880816" }, { name: "Bordo", hex: "#681F23" },
+    { name: "Sarı", hex: "#EBC912" }, { name: "Açık Yeşil", hex: "#70804A" },
+    { name: "Koyu Yeşil", hex: "#133022" }, { name: "Açık Mavi", hex: "#81A8BC" },
+    { name: "Lacivert", hex: "#0F1E30" }, { name: "Koyu Kahve", hex: "#635041" }
+  ];
+
+  const kurdeleColors = [   // Kurdele renkleri
+    { name: "Ekru", hex: "#E3E5D2" }, { name: "Açık Pembe", hex: "#C9AB9F" },
+    { name: "Şeker Pembe", hex: "#C97D90" }, { name: "Turuncu", hex: "#D74B15" },
+    { name: "Kırmızı", hex: "#880816" }, { name: "Bordo", hex: "#681F23" },
+    { name: "Sarı", hex: "#EBC912" }, { name: "Açık Yeşil", hex: "#70804A" },
+    { name: "Koyu Yeşil", hex: "#133022" }, { name: "Açık Mavi", hex: "#81A8BC" },
+    { name: "Lacivert", hex: "#0F1E30" }, { name: "Koyu Kahve", hex: "#635041" }
+  ];
+
+  const EKRU = "Ekru";
+  const TEX_ICONS = ["▬", "▦", "▩"]; // Düz / Küçük Pötikare / Büyük Pötikare
 
   /* ================= ORTAK YARDIMCI FONKSİYONLAR ================= */
   function findColorIndexByName(paletteArr, rawName) {
@@ -494,11 +574,11 @@
   let bbConfig = bbDefaultConfig();
   let bbSaveTimer = null;
 
-  function bbIsKirikBeyaz(idx) { return fabricColors[idx].name === KIRIK_BEYAZ; }
+  function bbIsEkru(idx) { return fabricColors[idx].name === EKRU; }
 
   function bbHandleColorChange(field, palette, dir, coupledTextureField) {
     bbConfig[field] = (bbConfig[field] + dir + palette.length) % palette.length;
-    if (coupledTextureField && palette === fabricColors && bbIsKirikBeyaz(bbConfig[field])) {
+    if (coupledTextureField && palette === fabricColors && bbIsEkru(bbConfig[field])) {
       bbConfig[coupledTextureField] = 0;
     }
     bbRenderUI();
@@ -508,8 +588,8 @@
   function bbHandleTextureChange(which, dir) {
     const colorField = which === 'top' ? 'topFabricColor' : 'bottomFabricColor';
     const textureField = which === 'top' ? 'topTexture' : 'bottomTexture';
-    if (bbIsKirikBeyaz(bbConfig[colorField])) {
-      bbShowToast('Kırık Beyaz kumaşta yalnızca Düz Kumaş bulunur.');
+    if (bbIsEkru(bbConfig[colorField])) {
+      bbShowToast('Ekru kumaşta yalnızca Düz Kumaş bulunur.');
       return;
     }
     bbConfig[textureField] = (bbConfig[textureField] + dir + bbTextures.length) % bbTextures.length;
@@ -564,8 +644,8 @@
         if (result && result.value) {
           const parsed = JSON.parse(result.value);
           bbConfig = { ...bbDefaultConfig(), ...parsed };
-          if (bbIsKirikBeyaz(bbConfig.topFabricColor)) bbConfig.topTexture = 0;
-          if (bbIsKirikBeyaz(bbConfig.bottomFabricColor)) bbConfig.bottomTexture = 0;
+          if (bbIsEkru(bbConfig.topFabricColor)) bbConfig.topTexture = 0;
+          if (bbIsEkru(bbConfig.bottomFabricColor)) bbConfig.bottomTexture = 0;
           document.getElementById('bbNameInput').value = bbConfig.name || '';
           document.getElementById('bbSaveIndicator').textContent = 'Kayıtlı tasarım yüklendi';
         }
@@ -587,13 +667,13 @@
     }
   }
 
-  // Tek kelimelik isimler asla ikinci satıra inmez. İki (veya daha fazla)
-  // kelimelik isimlerde ilk kelime üstte, geri kalanı altta — üst üste iki satır.
   function bbGetNameLines(rawName) {
     const trimmed = (rawName || '').trim();
     if (!trimmed) return ['İsim'];
     const words = trimmed.split(/\s+/);
     if (words.length <= 1) return [trimmed];
+    const combined = words.join(' ');
+    if (combined.length <= 12) return [combined]; // kısa iki kelimelik isim: yan yana, tek satır
     return [words[0], words.slice(1).join(' ')];
   }
 
@@ -610,41 +690,39 @@
   }
 
   function bbRenderUI() {
-    const topLocked = bbIsKirikBeyaz(bbConfig.topFabricColor);
-    document.getElementById('bbValTopFabric').textContent = fabricColors[bbConfig.topFabricColor].name;
+    const topLocked = bbIsEkru(bbConfig.topFabricColor);
     document.getElementById('bbDotTopFabric').style.background = fabricColors[bbConfig.topFabricColor].hex;
-    document.getElementById('bbValTopTexture').textContent = topLocked ? 'Düz Kumaş (sabit)' : bbTextures[bbConfig.topTexture];
-    document.getElementById('bbValTopTexture').classList.toggle('locked', topLocked);
-    document.getElementById('bbTopTextureRow').classList.toggle('locked', topLocked);
+    document.getElementById('bbLabelTopFabric').textContent = fabricColors[bbConfig.topFabricColor].name;
+    document.getElementById('bbTexIconTop').textContent = TEX_ICONS[bbConfig.topTexture];
+    document.getElementById('bbTexLabelTop').textContent = bbExportTextureNames[bbConfig.topTexture];
     document.getElementById('bbTopTexturePrev').disabled = topLocked;
     document.getElementById('bbTopTextureNext').disabled = topLocked;
     bbApplyFabric('bbTop', bbConfig.topFabricColor, bbConfig.topTexture);
 
-    const bottomLocked = bbIsKirikBeyaz(bbConfig.bottomFabricColor);
-    document.getElementById('bbValBottomFabric').textContent = fabricColors[bbConfig.bottomFabricColor].name;
+    const bottomLocked = bbIsEkru(bbConfig.bottomFabricColor);
     document.getElementById('bbDotBottomFabric').style.background = fabricColors[bbConfig.bottomFabricColor].hex;
-    document.getElementById('bbValBottomTexture').textContent = bottomLocked ? 'Düz Kumaş (sabit)' : bbTextures[bbConfig.bottomTexture];
-    document.getElementById('bbValBottomTexture').classList.toggle('locked', bottomLocked);
-    document.getElementById('bbBottomTextureRow').classList.toggle('locked', bottomLocked);
+    document.getElementById('bbLabelBottomFabric').textContent = fabricColors[bbConfig.bottomFabricColor].name;
+    document.getElementById('bbTexIconBottom').textContent = TEX_ICONS[bbConfig.bottomTexture];
+    document.getElementById('bbTexLabelBottom').textContent = bbExportTextureNames[bbConfig.bottomTexture];
     document.getElementById('bbBottomTexturePrev').disabled = bottomLocked;
     document.getElementById('bbBottomTextureNext').disabled = bottomLocked;
     bbApplyFabric('bbBottom', bbConfig.bottomFabricColor, bbConfig.bottomTexture);
 
-    document.getElementById('bbValSuTasi').textContent = suTasiColors[bbConfig.suTasiColor].name;
     document.getElementById('bbDotSuTasi').style.background = suTasiColors[bbConfig.suTasiColor].hex;
+    document.getElementById('bbLabelSuTasi').textContent = suTasiColors[bbConfig.suTasiColor].name;
     document.getElementById('bbSuTasiPatternBg').setAttribute('fill', suTasiColors[bbConfig.suTasiColor].hex);
 
-    document.getElementById('bbValPompon').textContent = pomponColors[bbConfig.pomponColor].name;
     document.getElementById('bbDotPompon').style.background = pomponColors[bbConfig.pomponColor].hex;
+    document.getElementById('bbLabelPompon').textContent = pomponColors[bbConfig.pomponColor].name;
     document.getElementById('bbPomponGroup').setAttribute('fill', pomponColors[bbConfig.pomponColor].hex);
 
-    document.getElementById('bbValKurdele').textContent = kurdeleColors[bbConfig.kurdeleColor].name;
     document.getElementById('bbDotKurdele').style.background = kurdeleColors[bbConfig.kurdeleColor].hex;
+    document.getElementById('bbLabelKurdele').textContent = kurdeleColors[bbConfig.kurdeleColor].name;
     document.getElementById('bbRibbonLeft').setAttribute('fill', kurdeleColors[bbConfig.kurdeleColor].hex);
     document.getElementById('bbRibbonRight').setAttribute('fill', kurdeleColors[bbConfig.kurdeleColor].hex);
 
-    document.getElementById('bbValThread').textContent = threadColors[bbConfig.threadColor].name;
     document.getElementById('bbDotThread').style.background = threadColors[bbConfig.threadColor].hex;
+    document.getElementById('bbLabelThread').textContent = threadColors[bbConfig.threadColor].name;
 
     const nameTxt = document.getElementById('bbNameText');
     const nameShadow = document.getElementById('bbNameShadow');
@@ -667,11 +745,21 @@
       nameShadow.setAttribute('fill-opacity', '0');
     }
 
+    const topTexLabel = topLocked ? 'Düz' : bbExportTextureNames[bbConfig.topTexture];
+    const bottomTexLabel = bottomLocked ? 'Düz' : bbExportTextureNames[bbConfig.bottomTexture];
+    document.getElementById('bbLegend').innerHTML =
+      `<b>Üst:</b> ${fabricColors[bbConfig.topFabricColor].name} (${topTexLabel}) · ` +
+      `<b>Alt:</b> ${fabricColors[bbConfig.bottomFabricColor].name} (${bottomTexLabel}) · ` +
+      `<b>Su Taşı:</b> ${suTasiColors[bbConfig.suTasiColor].name} · ` +
+      `<b>Ponpon:</b> ${pomponColors[bbConfig.pomponColor].name} · ` +
+      `<b>Kurdele:</b> ${kurdeleColors[bbConfig.kurdeleColor].name} · ` +
+      `<b>İsim:</b> ${threadColors[bbConfig.threadColor].name}`;
+
     updateCombinedMatrixBebek();
   }
 
   /* ================= 1'DEN 12'YE ŞAPKALAR ================= */
-  const palette = fabricColors; // aynı 12 rengi kullanır (istenirse bağımsız bir liste tanımlanabilir)
+  const partPalette = { fabric: fabricColors, pompon: pomponColors, ribbon: kurdeleColors, text: threadColors };
   const textures = ["Düz Kumaş", "Küçük Pötikare", "Büyük Pötikare"];
   const STORAGE_KEY = "deru-parti-sapkasi-set";
 
@@ -679,8 +767,14 @@
   let hatConfigs = {};
   let saveTimer = null;
 
-  function defaultConfig(){ return { fabric: 0, pompon: 0, ribbon: 0, text: 0, textureType: 0 }; }
+  function defaultConfig(){ return { fabric: 0, pompon: 0, ribbon: 0, text: 0, textureType: 0, useHalf: false }; }
   for (let i = 1; i <= 12; i++) hatConfigs[i] = defaultConfig();
+
+  function toggleHat6Half(checked) {
+    hatConfigs[6].useHalf = checked;
+    renderUI();
+    queueSave();
+  }
 
   function changeHatNumber(dir) {
     currentHatNum += dir;
@@ -697,16 +791,17 @@
 
   function handleColorChange(part, dir) {
     const cfg = hatConfigs[currentHatNum];
-    cfg[part] = (cfg[part] + dir + palette.length) % palette.length;
-    if (part === 'fabric' && palette[cfg.fabric].name === KIRIK_BEYAZ) cfg.textureType = 0;
+    const pal = partPalette[part];
+    cfg[part] = (cfg[part] + dir + pal.length) % pal.length;
+    if (part === 'fabric' && pal[cfg.fabric].name === EKRU) cfg.textureType = 0;
     renderUI();
     queueSave();
   }
 
   function handleTextureChange(dir) {
     const cfg = hatConfigs[currentHatNum];
-    if (palette[cfg.fabric].name === KIRIK_BEYAZ) {
-      showToast('Kırık Beyaz kumaşta yalnızca Düz Kumaş bulunur.');
+    if (fabricColors[cfg.fabric].name === EKRU) {
+      showToast('Ekru kumaşta yalnızca Düz Kumaş bulunur.');
       return;
     }
     cfg.textureType = (cfg.textureType + dir + textures.length) % textures.length;
@@ -764,7 +859,7 @@
           for (let i = 1; i <= 12; i++) {
             if (parsed[i]) {
               const merged = { ...defaultConfig(), ...parsed[i] };
-              if (palette[merged.fabric].name === KIRIK_BEYAZ) merged.textureType = 0;
+              if (fabricColors[merged.fabric] && fabricColors[merged.fabric].name === EKRU) merged.textureType = 0;
               hatConfigs[i] = merged;
             }
           }
@@ -778,66 +873,88 @@
     const cfg = hatConfigs[currentHatNum];
 
     document.getElementById('valHatNumber').textContent = `Şapka No ${currentHatNum}`;
-    document.getElementById('valFabric').textContent = palette[cfg.fabric].name;
-    document.getElementById('valPompon').textContent = palette[cfg.pompon].name;
-    document.getElementById('valRibbon').textContent = palette[cfg.ribbon].name;
-    document.getElementById('valText').textContent = palette[cfg.text].name;
 
-    const locked = palette[cfg.fabric].name === KIRIK_BEYAZ;
-    document.getElementById('valTexture').textContent = locked ? 'Düz Kumaş (sabit)' : textures[cfg.textureType];
-    document.getElementById('valTexture').classList.toggle('locked', locked);
-    document.getElementById('textureRow').classList.toggle('locked', locked);
+    const hat6Row = document.getElementById('hat6Special');
+    const hat6Checkbox = document.getElementById('hat6HalfToggle');
+    if (currentHatNum === 6) {
+      hat6Row.style.display = 'block';
+      hat6Checkbox.checked = !!hatConfigs[6].useHalf;
+    } else {
+      hat6Row.style.display = 'none';
+    }
+
+    const locked = fabricColors[cfg.fabric].name === EKRU;
+    document.getElementById('texIconStandard').textContent = TEX_ICONS[cfg.textureType];
+    document.getElementById('texLabelStandard').textContent = textures[cfg.textureType];
     document.getElementById('textureBtnPrev').disabled = locked;
     document.getElementById('textureBtnNext').disabled = locked;
 
-    document.getElementById('dotFabric').style.background = palette[cfg.fabric].hex;
-    document.getElementById('dotPompon').style.background = palette[cfg.pompon].hex;
-    document.getElementById('dotRibbon').style.background = palette[cfg.ribbon].hex;
-    document.getElementById('dotText').style.background = palette[cfg.text].hex;
+    document.getElementById('dotFabric').style.background = fabricColors[cfg.fabric].hex;
+    document.getElementById('labelFabric').textContent = fabricColors[cfg.fabric].name;
+    document.getElementById('dotPompon').style.background = pomponColors[cfg.pompon].hex;
+    document.getElementById('labelPompon').textContent = pomponColors[cfg.pompon].name;
+    document.getElementById('dotRibbon').style.background = kurdeleColors[cfg.ribbon].hex;
+    document.getElementById('labelRibbon').textContent = kurdeleColors[cfg.ribbon].name;
+    document.getElementById('dotText').style.background = threadColors[cfg.text].hex;
+    document.getElementById('labelText').textContent = threadColors[cfg.text].name;
 
     const mainTxt = document.getElementById('mainHatNumberText');
     const shineTxt = document.getElementById('mainHatNumberShine');
-    mainTxt.textContent = currentHatNum;
-    shineTxt.textContent = currentHatNum;
+    const showHalf = currentHatNum === 6 && cfg.useHalf;
+    const displayValue = showHalf ? '1/2' : String(currentHatNum);
+    mainTxt.textContent = displayValue;
+    shineTxt.textContent = displayValue;
     const isTwoDigit = currentHatNum >= 10;
-    const fontSize = isTwoDigit ? '135' : '165';
-    const yPos = isTwoDigit ? '365' : '375';
+    const fontSize = showHalf ? '108' : (isTwoDigit ? '135' : '165');
+    const yPos = showHalf ? '360' : (isTwoDigit ? '365' : '375');
     [mainTxt, shineTxt].forEach(el => { el.setAttribute('font-size', fontSize); el.setAttribute('y', yPos); });
 
-    document.getElementById('mainRibbonLeft').setAttribute('fill', palette[cfg.ribbon].hex);
-    document.getElementById('mainRibbonRight').setAttribute('fill', palette[cfg.ribbon].hex);
-    document.getElementById('mainPomponGroup').setAttribute('fill', palette[cfg.pompon].hex);
-    mainTxt.setAttribute('fill', palette[cfg.text].hex);
+    document.getElementById('mainRibbonLeft').setAttribute('fill', kurdeleColors[cfg.ribbon].hex);
+    document.getElementById('mainRibbonRight').setAttribute('fill', kurdeleColors[cfg.ribbon].hex);
+    document.getElementById('mainPomponGroup').setAttribute('fill', pomponColors[cfg.pompon].hex);
+    mainTxt.setAttribute('fill', threadColors[cfg.text].hex);
 
     const mainBody = document.getElementById('mainHatBody');
     if (cfg.textureType === 0) {
-      mainBody.setAttribute('fill', palette[cfg.fabric].hex);
+      mainBody.setAttribute('fill', fabricColors[cfg.fabric].hex);
     } else if (cfg.textureType === 1) {
-      document.getElementById('mainSmallPotiBg').setAttribute('fill', palette[cfg.fabric].hex);
+      document.getElementById('mainSmallPotiBg').setAttribute('fill', fabricColors[cfg.fabric].hex);
       mainBody.setAttribute('fill', 'url(#mainSmallPoti)');
     } else {
-      document.getElementById('mainLargePotiBg').setAttribute('fill', palette[cfg.fabric].hex);
+      document.getElementById('mainLargePotiBg').setAttribute('fill', fabricColors[cfg.fabric].hex);
       mainBody.setAttribute('fill', 'url(#mainLargePoti)');
     }
+
+    const texLabel = locked ? 'Düz' : textures[cfg.textureType];
+    document.getElementById('legend').innerHTML =
+      `<b>Kumaş:</b> ${fabricColors[cfg.fabric].name} (${texLabel}) · ` +
+      `<b>Ponpon:</b> ${pomponColors[cfg.pompon].name} · ` +
+      `<b>Kurdele:</b> ${kurdeleColors[cfg.ribbon].name} · ` +
+      `<b>Sayı:</b> ${threadColors[cfg.text].name}`;
 
     for (let i = 1; i <= 12; i++) {
       const c = hatConfigs[i];
       const itemEl = document.getElementById(`m-item-${i}`);
       itemEl.classList.toggle('active', i === currentHatNum);
 
-      document.getElementById(`m-ribbonLeft-${i}`).setAttribute('fill', palette[c.ribbon].hex);
-      document.getElementById(`m-ribbonRight-${i}`).setAttribute('fill', palette[c.ribbon].hex);
-      document.getElementById(`m-pompon-${i}`).setAttribute('fill', palette[c.pompon].hex);
-      document.getElementById(`m-text-${i}`).setAttribute('fill', palette[c.text].hex);
+      document.getElementById(`m-ribbonLeft-${i}`).setAttribute('fill', kurdeleColors[c.ribbon].hex);
+      document.getElementById(`m-ribbonRight-${i}`).setAttribute('fill', kurdeleColors[c.ribbon].hex);
+      document.getElementById(`m-pompon-${i}`).setAttribute('fill', pomponColors[c.pompon].hex);
+      const miniTextEl = document.getElementById(`m-text-${i}`);
+      miniTextEl.setAttribute('fill', threadColors[c.text].hex);
+      if (i === 6) {
+        miniTextEl.textContent = c.useHalf ? '1/2' : '6';
+        miniTextEl.setAttribute('font-size', c.useHalf ? 108 : 165);
+      }
 
       const miniBody = document.getElementById(`m-body-${i}`);
       if (c.textureType === 0) {
-        miniBody.setAttribute('fill', palette[c.fabric].hex);
+        miniBody.setAttribute('fill', fabricColors[c.fabric].hex);
       } else if (c.textureType === 1) {
-        document.getElementById(`m-sbase-${i}`).setAttribute('fill', palette[c.fabric].hex);
+        document.getElementById(`m-sbase-${i}`).setAttribute('fill', fabricColors[c.fabric].hex);
         miniBody.setAttribute('fill', `url(#m-spoti-${i})`);
       } else {
-        document.getElementById(`m-lbase-${i}`).setAttribute('fill', palette[c.fabric].hex);
+        document.getElementById(`m-lbase-${i}`).setAttribute('fill', fabricColors[c.fabric].hex);
         miniBody.setAttribute('fill', `url(#m-lpoti-${i})`);
       }
     }
@@ -957,7 +1074,7 @@
     ];
     for (let i = 1; i <= 12; i++) {
       const c = hatConfigs[i];
-      lines.push(`No ${i}: Kumaş ${palette[c.fabric].name} (${textures[c.textureType]}) · Ponpon ${palette[c.pompon].name} · Kurdele ${palette[c.ribbon].name} · Sayı ${palette[c.text].name}`);
+      lines.push(`No ${i}: Kumaş ${fabricColors[c.fabric].name} (${textures[c.textureType]}) · Ponpon ${pomponColors[c.pompon].name} · Kurdele ${kurdeleColors[c.ribbon].name} · Sayı ${threadColors[c.text].name}`);
     }
     const text = lines.join('\n');
     copyTextToClipboard(text, () => combinedShowToast('13 şapkanın tamamı tek özet olarak panoya kopyalandı.'));
@@ -969,7 +1086,6 @@
 
     const warnings = [];
 
-    // --- Bebek Şapkası bölümü ---
     const bebekMatch = raw.match(/\[BEBEK[^\]]*\]([\s\S]*?)(?=\[|$)/i);
     if (bebekMatch) {
       const nextBb = bbDefaultConfig();
@@ -990,7 +1106,7 @@
           const ci = findColorIndexByName(fabricColors, colorName);
           if (ci >= 0) nextBb.topFabricColor = ci; else warnings.push(`Üst Kumaş rengi "${colorName}" bulunamadı`);
           if (textureName) { const ti = findTextureIndexByName(bbExportTextureNames, textureName); if (ti >= 0) nextBb.topTexture = ti; }
-          if (ci >= 0 && bbIsKirikBeyaz(ci)) nextBb.topTexture = 0;
+          if (ci >= 0 && bbIsEkru(ci)) nextBb.topTexture = 0;
         } else if (key === 'alt kumaş' || key === 'alt kumas') {
           const m = value.match(/^(.*?)\s*\((.*?)\)\s*$/);
           const colorName = m ? m[1] : value;
@@ -998,7 +1114,7 @@
           const ci = findColorIndexByName(fabricColors, colorName);
           if (ci >= 0) nextBb.bottomFabricColor = ci; else warnings.push(`Alt Kumaş rengi "${colorName}" bulunamadı`);
           if (textureName) { const ti = findTextureIndexByName(bbExportTextureNames, textureName); if (ti >= 0) nextBb.bottomTexture = ti; }
-          if (ci >= 0 && bbIsKirikBeyaz(ci)) nextBb.bottomTexture = 0;
+          if (ci >= 0 && bbIsEkru(ci)) nextBb.bottomTexture = 0;
         } else if (key === 'su taşı' || key === 'su tasi') {
           const ci = findColorIndexByName(suTasiColors, value);
           if (ci >= 0) nextBb.suTasiColor = ci; else warnings.push(`Su Taşı rengi "${value}" bulunamadı`);
@@ -1017,7 +1133,6 @@
       document.getElementById('bbNameInput').value = bbConfig.name;
     }
 
-    // --- 1'den 12'ye şapkalar bölümü ---
     const standardMatch = raw.match(/\[1[^\]]*\]([\s\S]*)$/i);
     if (standardMatch) {
       const lineRe = /No\s*(\d+):\s*Kumaş\s+(.+?)\s*\((.+?)\)\s*·\s*Ponpon\s+(.+?)\s*·\s*Kurdele\s+(.+?)\s*·\s*Sayı\s+(.+?)\s*$/i;
@@ -1029,17 +1144,17 @@
         if (num < 1 || num > 12) continue;
         const next = defaultConfig();
 
-        const fi = findColorIndexByName(palette, m[2]);
+        const fi = findColorIndexByName(fabricColors, m[2]);
         if (fi >= 0) next.fabric = fi; else warnings.push(`No ${num}: Kumaş rengi "${m[2]}" bulunamadı`);
         const ti = findTextureIndexByName(textures, m[3]);
         if (ti >= 0) next.textureType = ti;
-        if (fi >= 0 && palette[fi].name === KIRIK_BEYAZ) next.textureType = 0;
+        if (fi >= 0 && fabricColors[fi].name === EKRU) next.textureType = 0;
 
-        const pi = findColorIndexByName(palette, m[4]);
+        const pi = findColorIndexByName(pomponColors, m[4]);
         if (pi >= 0) next.pompon = pi; else warnings.push(`No ${num}: Ponpon rengi "${m[4]}" bulunamadı`);
-        const ri = findColorIndexByName(palette, m[5]);
+        const ri = findColorIndexByName(kurdeleColors, m[5]);
         if (ri >= 0) next.ribbon = ri; else warnings.push(`No ${num}: Kurdele rengi "${m[5]}" bulunamadı`);
-        const txi = findColorIndexByName(palette, m[6]);
+        const txi = findColorIndexByName(threadColors, m[6]);
         if (txi >= 0) next.text = txi; else warnings.push(`No ${num}: Sayı rengi "${m[6]}" bulunamadı`);
 
         hatConfigs[num] = next;
